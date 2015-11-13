@@ -1,0 +1,303 @@
+
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+
+/* Starting location input --------------------------------- */
+
+pre {
+  opacity: 0;
+}
+
+
+.strong {
+  color: red;
+}
+
+
+.results  {
+  position: absolute;
+  list-style-type: none;
+  height: 300px;
+  width: 800px;
+  border-radius: 10px;
+  margin-bottom: 0px;
+  top: 105%;
+  left: -5%;
+  overflow: hidden;
+}
+.results li {
+  height: 30px;
+  width: 400px;
+  overflow: scroll;
+  top: 0px;
+
+}
+.result {
+  position: relative;
+  display: block;
+  margin-bottom: 2px;
+  top: 0;
+  padding-top: 0;
+  background-color: transparent;
+  list-style-type: none;
+  border: none;
+  height: 25px;
+  width: 400px;
+  border-radius: 10px;
+  margin-bottom: 0px;
+  text-align: left;
+  overflow: hidden;
+}
+.result:hover {
+  color: #ffd94d;
+  height: 35px;
+  width: 500px;
+}
+.result:active {
+  color: #e97370;
+}
+
+
+.result {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+.result:hover {
+  color: #ffd94d;
+  font-size: 24px;
+}
+
+#input1 {
+  position: fixed;
+  height: 60px;
+  width: 400px;
+  background-color: transparent;
+  color: #ffe550;
+  border: none;
+  border-left: none;
+  border-radius: 0px 30px 30px 0px;
+  z-index: 5;
+  font-size: 36px;
+  font-family: Architects Daughter;
+  left: 600px;
+  top: 317px;
+  display: none;
+}
+.input1 {
+  height: 60px;
+  width: 400px;
+  background-color: transparent;
+  color: #ffe550;
+  border: 3px solid white;
+  border-left: none;
+  border-radius: 0px 30px 30px 0px;
+  font-size: 36px;
+  font-family: Architects Daughter;
+}
+
+#arrow {
+  color: white;
+  position: fixed;
+  left: 937px;
+  top: 317px;
+  z-index: 6;
+  display: none;
+}
+#arrow:hover {
+  color: blue;
+}
+#arrow:active {
+  color: red;
+}
+
+#lines {
+  position: fixed;
+  height: 62px;
+  width: 40px;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  left: 578px;
+  top: 317px;
+}
+
+/* Parallax feature --------------------------------------- */
+
+.parallax {
+  background-color: #cbdce0;
+  perspective: 1px;
+  height: 100vh;
+  width: 1280px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.parallax__layer {
+  position: absolute;
+  margin-left: 0;
+  padding-left: 0;
+  right: 0px;
+  left: 0px;
+}
+.parallax__layer--stage {
+  position: absolute;
+  margin-left: 0px;
+  padding-left: 0px;
+  top: 0%;
+  width: 100%;
+  z-index: 3;
+  transform: translateZ(-15px) scale(16);
+}
+.parallax__layer--crowd {
+  position: absolute;
+  display: flex;
+  top: 690%;
+  width: 100%;
+  left: -34%;
+  z-index: 4;
+  transform: translateZ(-8px) scale(11);
+}
+.parallax__layer--schrecca {
+
+  display: flex;
+  top: 730%;
+  width: 100%;
+  z-index: 5;
+  transform: translateZ(-5px) scale(7.5);
+}
+
+/* GoOnTour Logo ------------------------------------ */
+
+#logo {
+  width: 730px;
+  height: 730px;
+  position: fixed;
+  margin: 0;
+  padding-top: 0;
+  left: 1340px;
+  top: -1000px;
+  transform: translateZ(-15px) scale(16);
+  z-index: 1;
+}
+#logo:hover {
+  opacity: .6;
+  width: 750px;
+  height: 750px;
+}
+
+/* Navigation Buttons ----------------------------------- */
+
+.circle {
+  position: fixed;
+  width: 105px;
+  height: 105px;
+  border: 3px solid white;
+  border-radius: 60px;
+}
+#circle:hover {
+  background-color: #afd8e4;
+}
+#circle:hover #music_text {
+  display: block;
+}
+#circle:active {
+  background-color: #e4aeb3;
+  opacity: .8;
+}
+#circle2:hover {
+  background-color: #afd8e4;
+}
+#circle2:hover #mapo_text {
+  display: block;
+}
+#circle2:active {
+  background-color: #e4aeb3;
+  opacity: .8;
+}
+
+#circle {
+  left: 480px;
+  top: 295px;
+}
+
+#circle2 {
+  left: 675px;
+  top: 295px;
+
+}
+
+#music {
+  color: white;
+  position: fixed;
+  z-index: 6;
+  left: 496px;
+  top: 304px;
+}
+
+#music_text {
+  position: absolute;
+  font-size: 20px;
+  font-family: Architects Daughter;
+  bottom: -40px;
+  color: white;
+  display: none;
+}
+
+#mapo {
+  color: white;
+  position: fixed;
+  z-index: 6;
+  left: 694px;
+  top: 318px;
+}
+
+#mapo_text {
+  position: absolute;
+  font-size: 20px;
+  font-family: Architects Daughter;
+  bottom: -40px;
+  color: white;
+  display: none;
+}
+
+
+/* Ornamentation ---------------------------------*/
+
+.title {
+  position: fixed;
+  right: 3%;
+  top: 1%;
+  color: #ffe550;
+  font-size: 54px;
+  font-family: Architects Daughter;
+}
+
+#audio {
+  position: fixed;
+  bottom: 0px;
+  color: blue;
+  height: 20px;
+  width: 100%;
+}
+
+#input1 {
+
+}
+
+.tTip {
+  position: absolute;
+  text-align: center;
+  height: 30px;
+  width: 300px;
+  background-color: transparent;
+  border-radius: 7px;
+  border: 1px solid white;
+  color: white;
+  font-size: 11px;
+  left: 40px;
+  bottom: 110px;
+  overflow: scroll;
+}

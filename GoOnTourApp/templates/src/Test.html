@@ -1,0 +1,107 @@
+
+
+<html>
+
+Javascript Sample page <br>
+
+<script type="text/javascript" src="http://api.eventful.com/js/api">
+
+</script>
+
+<script type="text/javascript">
+
+function show_alert()
+
+{
+
+  var oArgs = {
+
+            app_key:"hQBcbKnVd94BDtCc",
+
+            id: "20218701",
+
+            page_size: 25 ,
+
+  };
+
+  EVDB.API.call("/events/get", oArgs, function(oData) {
+
+    console.log(oData);
+    alert(oData.toString());
+
+
+    });
+
+}
+
+
+
+function show_alert2()
+
+{
+
+  var oArgs = {
+
+    app_key: "hQBcbKnVd94BDtCc",
+
+    q: "music",
+
+    keywords: "jam bands && rock",
+
+    location: "45.5236111, -122.6756222", 
+
+    within: 2000,
+
+    units: "mi",
+
+    date: "2015081600-2015083100",
+
+    page_size: 50,
+
+    sort_order: "relevance",
+
+  };
+
+  EVDB.API.call("/events/search", oArgs, function(oData) {
+
+    console.log(obj);
+    alert(obj.toString());
+    console.log(oData.events.event)
+
+
+  });
+
+}
+
+function xmlEventfulFunction() {
+  request = new XMLHttpRequest;
+  var url = "http://api.eventful.com/json/events/search?app_key=hQBcbKnVd94BDtCclocation=Portland&within=1000&units=mi&when=this+weekend&what=jam+band";
+  request.onload = function () {
+    if (request.status === 200) {
+      var response = request.responseText;
+      console.log(response);
+    }
+  }
+  request.open('POST', url, true);
+  request.send(null);
+};
+
+
+</script>
+
+
+
+<body>
+
+Run Sample api searches <br><br>
+
+<input type="button" onclick="show_alert()" value="Query #1 " /> <br>
+
+<input type="button" onclick="show_alert2()" value="Query #2 " /> <br>
+
+<input type="button" onclick="xmlEventfulFunction()" value="Query #3 " /> <br>
+
+
+</body>
+
+</html>

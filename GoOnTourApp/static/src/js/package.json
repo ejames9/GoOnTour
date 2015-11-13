@@ -1,0 +1,8 @@
+{
+  "name": "GoOnTour.org",
+  "version": "0.0.0",
+  "dependencies": {
+    "react-daterange-picker": "^0.12.2",
+    "react-geocoder": "^2.5.0"
+  }
+}

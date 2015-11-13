@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="eng">
+ <head>
+   <link rel="stylesheet" type="text/css" href="/static/roadi/style.css"/>
+   <link rel="stylesheet" type="text/css" href="static/roadi/dhtmlxcalendar/codebase/dhtmlxcalendar.css"/>
+   <script type="text/javascript" src="static/roadi/dhtmlxcalendar/codebase/dhtmlxcalendar.js"></script> 
+   <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
+ </head>
+ <body>
+   <div id="map"></div>
+   <div id="block">
+      <input type="text" id="start" placeholder="origin">
+      <input type="text" id="end" placeholder="destination">
+      <input type="text" id="start_date" placeholder="start date"/>
+      <input type="text" id="end_date" placeholder="end date"/>
+      <script>
+      var calendars = new dhtmlXCalendarObject(["start_date", "end_date"]);
+      </script>
+      <input type="text" id="favArtist" placeholder="favorite artist">
+      <input type="text" id="favGenre" placeholder="favorite genres">
+      <input type="text" id="keywords" placeholder="keywords">
+      <button type="submit" id="submit">Route</button>
+   </div>
+   <script type="text/JavaScript" src="/static/roadi/eventfulData.js"></script>
+   <script type="text/JavaScript" src="/static/roadi/roadiMaps.js"></script>
+   <script async defer
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA4MEpVoeKQPBYGVEmIPOpy2wGEPhfiV2k&callback=initMap&libraries=drawing">
+   </script> 
+ </body>
+</html>

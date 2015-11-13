@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="eng">
+ <head>
+   <link rel="stylesheet" href="/static/build/index/GoOnTour.css"/>
+   <!-- <link href='https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet'/> -->
+ </head>
+ <body>
+   <main>
+    <div id='trashCan'>
+     <div class='parallax'>
+       <img src='/static/build/images/stage.png' class='parallax__layer parallax__layer--stage'/>
+       <img src='/static/build/images/crowd2.png' class='parallax__layer parallax__layer--crowd'/>
+       <img src='/static/build/images/schreccinstien2.png' class='parallax__layer parallax__layer--schrecca'/>
+       <img src='/static/build/images/roadiLogo3.png' id='logo'/>
+     </div>
+     <div class='pad1' id='input1'></div>
+     <i class="fa fa-location-arrow fa-4x" id='arrow'></i>
+     <div class='title' id='url'>www.GoOnTour.org</div>
+     <audio id='audio' src='http://nugs.net/radio/nugs.net_radio.m3u' controls>nugs.net live radio stream</audio>
+     <div class='circle' id='circle2'><i class="fa fa-map-o fa-4x" id='mapo'></i><span id='mapo_text'>plan a tour</span></div>
+     <div class='circle' id='circle'><i class="fa fa-music fa-5x" id='music'></i><span id='music_text'>find shows</span></div>
+     <!-- <div id='app'></div> -->
+    </div>
+   </main>
+   <!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+   <script src='https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script> -->
+   <script type="text/JavaScript" src="/static/build/index/GoOnTourIndex.js"></script>
+ </body>
+</html>

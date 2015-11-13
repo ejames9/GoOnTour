@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <title>Mapbox Directions</title>
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.uncompressed.js'></script>
+    <link href='//api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
+
+    <script src='dist/mapbox.directions.js'></script>
+    <link href='dist/mapbox.directions.css' rel='stylesheet' />
+
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js'></script>
+
+    <style>
+        html, body, p {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        #map {
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        #inputs,
+        #errors,
+        #directions {
+            position: fixed;
+            width: 33.3333%;
+            max-width: 300px;
+            min-width: 200px;
+        }
+
+        #inputs {
+            z-index: 10;
+            top: 10px;
+            left: 10px;
+        }
+
+        #directions {
+            z-index: 9;
+            background: rgba(0,0,0,.8);
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
+            -webkit-transition: -webkit-transform .15s;
+               -moz-transition:    -moz-transform .15s;
+                 -o-transition:      -o-transform .15s;
+                    transition:         transform .15s;
+            -webkit-transform:translateX(100%);
+               -moz-transform:translateX(100%);
+                 -o-transform:translateX(100%);
+                    transform:translateX(100%);
+        }
+
+        #directions.active {
+            -webkit-transform:translateX(0%);
+               -moz-transform:translateX(0%);
+                 -o-transform:translateX(0%);
+                    transform:translateX(0%);
+        }
+
+        #directions::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            border-left: 0;
+            background: none;
+        }
+
+        #errors {
+            z-index: 8;
+            opacity: 0;
+            padding: 10px;
+            border-radius: 3px;
+            background: rgba(0,0,0,.25);
+            top: 130px;
+            left: 10px;
+            -webkit-transition: all .15s;
+               -moz-transition: all .15s;
+                 -o-transition: all .15s;
+                    transition: all .15s;
+        }
+
+        #errors.mapbox-error-active {
+            opacity: 1;
+        }
+
+        #directions::-webkit-scrollbar-track {
+            background: none;
+        }
+
+        #directions::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .1);
+            border-radius: 0;
+        }
+
+        #instructions::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, .2);
+            cursor: pointer;
+        }
+
+        .mapbox-maplogo {
+            position:absolute;
+            display:block;
+            height: 20px;
+            width: 65px;
+            left:10px;
+            bottom:10px;
+            text-indent: -9999px;
+            z-index:99999;
+            overflow:hidden;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIIAAAAoCAMAAAAFWtJHAAAAwFBMVEUAAAAAAAAAAABtbW0AAAAAAAAAAAAAAAAAAAAAAAClpaUAAADp6ekAAAD5+fna2toAAAAMDAzv7+/Nzc0AAAA2Njb8/Pz9/f3T09MAAAAAAAD7+/sAAAArKyuxsbH39/fs7OwbGxuIiIjz8/N8fHyenp7u7u74+PgAAAC8vLxWVlbx8fF1dXXl5eVcXFyUlJTQ0NDFxcVCQkLAwMC4uLj19fXo6OjW1tarq6ve3t77+/vi4uL6+vrKysrNzc3///8w7gSSAAAAP3RSTlMAOQNdPSYBPywKexLLGPCxNEHXnzFL+v2nGwf1IEiE6dBFad9jd9PuLo1V2mDDV3Cjl06SiuXIq4C3973ym6BQMVUPAAAEXElEQVR4Ae2WCVP6OBiH05L0l1IqrVbkKHJ54I0oHn+PfP9vtUle0z/YdhbH2XVnd58ZnRJIeHiPJOx//mH4vQSAN+8FjAhFxgHIaPvJeZ99hxwEElon5iAQbj85Y98g8ODwjEOMAvGFyeE3FEKgodTBqj0BJGN9DhyNd5Ta3ean9QEopfaA+LsKhnEKRExqg4FSP6Og7oEkAjBWnxSCgBX4xF+kcLoPcOBQrSv0e5kH7s1j37jECQieCTPiFGxL5VHw2zQWCeeJiPt6kjRQw0XSkIdVChf67xGa4alSnZlT6HEQ8CK9ANbhvXUF9xlDkBfTuHDWScgC9+z5FQpPI12TlwC6+sV7ixR8CUMKiwjm2GQeOQWHMGuHGdbnObJAwCEqFJpNU5H6uaPUaEIKiQfg+PHk1+u4OwW9PlWW2ctbA4BHCtp+cNK+H8Jos4gDmC5ar4Nx9waaG/2B13NgDqS7+vm2RgEtEws82P+kwIHhs/pgkQKcFIhfd7CogtGNjYMHTLpurD0ERbYFw4JaD3GlQuNAL/JEsSAF4HqlCnaHACk4WhOn4OgCkMD5hSpYNYDJTD8Y46n+jsE1kPhVCuR6QBXhFK7MUOu9O6b1SWF3b+/9ZVWMGOlu93E8UDaAhgc7bfH+0DHqKXCkHzoNDFfU+zxiVQrUC9QXTuHYtKpN59OA3IxCG4b7jh6ZFuVockaNTW09mkJzOaPU49a6mE9cAchZpQJNpUWcwgV9r6FJswsFKrITp2B5pMBMdnS0z2HZNy2+BNKxSZxZfglkrFYBJxQnpzA5sN/HheR2aFQoZBLAi149dQoyAYYjW0hHlHguBAdMcR0DuDZ5omevX6+AI8qcU7ikKT3GBHCnXwydgmCC0tRwCnGQ2Wp6Be71yNIWfQSkOl9vAI1SBCNWrwC01RROgX7BuT2HI4r7tFAw086p/NwZEdOEa7R1uAFuNmQPuKAEAjYNQ0CyeoUEWHYBnpQVQgpvc0Ph+gsKlAnKg1+vEHsw5LKciLKCAJobiWBzYFGbCKpHqkZZrxBFHEASyFI59vJPCskcwNVGOWZAOqsrR+pKbaNeAMT1CixMEtlnsqopNxUMzVJT3tY35aXZm6a6Y9QhwMN6BUJWbE1lhbMO1WehkO7poO0sK7em9MJGxp1XSbC1gtugzzSLQmGsX7VntJGSwsPZ2d2z3bIPKzdoOp3Wzqt8G4XyMVUoFIxLx1S7+piaHtCvR3FeRVsq0GFdp9C5TbGpcNqsPqyHKxcfd14h21KhuLKUFU4f3osrC7F6uV3WXFnadL7wyAPeKDXw2RoJCO5GY4DouYvb/gepVXheLoewzPseQG9N/vzilrMIjoStE3++zvle4eSurw7XEe76ynI4aq+v7lEyt1x5awiFlFLQbHKIpabnM3eJLym4Szzzc/du7SU+zOXv9UNpECH7IoH/gecURPlN9vdQpeD47yhIFNX0U0QgvID9nENm+yxk/xb+AGAjNfRZuk9qAAAAAElFTkSuQmCC);
+            background-repeat:no-repeat;
+            background-position: 0 0 ;
+            background-size: 65px 20px;
+    }
+    </style>
+</head>
+<body>
+
+<div id='inputs'></div>
+<div id='errors'></div>
+<div id='directions'>
+    <div id='routes'></div>
+    <div id='instructions'></div>
+</div>
+
+<div id='map'>
+</div>
+
+<script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZXhhbXBsZXMiLCJhIjoiZkhzMGlzTSJ9.CFlR0dFRRnXdppGZ5F2CrQ';
+
+    var map = L.mapbox.map('map', null, {
+        worldCopyJump: true,
+        zoomControl: false
+    }).setView([37.77, -122.44], 13);
+
+    map.attributionControl.setPosition('bottomleft');
+
+    var drivingLayer = L.mapbox.tileLayer('mapbox.emerald').addTo(map);
+    var walkingLayer = L.mapbox.tileLayer('mapbox.outdoors');
+
+    var directions = L.mapbox.directions();
+
+    var directionsLayer = L.mapbox.directions.layer(directions)
+        .addTo(map);
+
+    var directionsInputControl = L.mapbox.directions.inputControl('inputs', directions)
+        .addTo(map);
+
+    var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', directions)
+        .addTo(map);
+
+    var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
+        .addTo(map);
+
+    var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions)
+        .addTo(map);
+
+    var hash = new L.Hash(map);
+
+    // Use #z/lon/lat rather than #z/lat/lon
+
+    hash.parseHash = function(hash) {
+        if(hash.indexOf('#') === 0) {
+            hash = hash.substr(1);
+        }
+        var args = hash.split("/");
+        if (args.length == 3) {
+            var zoom = parseInt(args[0], 10),
+                lon = parseFloat(args[1]),
+                lat = parseFloat(args[2]);
+            if (isNaN(zoom) || isNaN(lat) || isNaN(lon)) {
+                return false;
+            } else {
+                return {
+                    center: new L.LatLng(lat, lon),
+                    zoom: zoom
+                };
+            }
+        } else {
+            return false;
+        }
+    };
+
+    hash.formatHash = function(map) {
+        var center = map.getCenter(),
+            zoom = map.getZoom(),
+            precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+
+        return "#" + [zoom,
+            center.lng.toFixed(precision),
+            center.lat.toFixed(precision)
+        ].join("/");
+    };
+
+    directions.on('profile', function(e) {
+        if (e.profile === 'mapbox.driving') {
+            map.addLayer(drivingLayer).removeLayer(walkingLayer);
+        } else {
+            map.addLayer(walkingLayer).removeLayer(drivingLayer);
+        }
+    }).on('load', function() {
+        document.querySelector('#directions').className = 'active';
+
+        var precision = Math.max(0, Math.ceil(Math.log(map.getZoom()) / Math.LN2)),
+            points = [directions.getOrigin()]
+                    .concat(directions.getWaypoints())
+                    .concat([directions.getDestination()])
+                    .map(function (f) {
+                        var c = f.geometry.coordinates;
+                        return [c[0].toFixed(precision), c[1].toFixed(precision)];
+                    });
+
+        history.replaceState({}, null,
+                '?route=' + points.join(';')
+                + '&profile=' + directions.getProfile()
+                + location.hash);
+
+    }).on('unload', function() {
+        document.querySelector('#directions').className = '';
+
+        history.replaceState({}, null, location.pathname + location.hash);
+    });
+
+    var search = window.location.search.substring(1).split('&');
+
+    var profile = (search[1] || '').split('profile=').pop();
+    if (profile) {
+        directions.setProfile(profile);
+    }
+
+    var waypoints = decodeURIComponent(search[0].split('route=').pop()).split(';');
+    if (waypoints.length >= 2) {
+        function toLatLng(waypoint) {
+            return L.latLng(waypoint.split(',').reverse());
+        }
+
+        directions
+                .setOrigin(toLatLng(waypoints[0]))
+                .setDestination(toLatLng(waypoints[waypoints.length - 1]))
+                .setWaypoints(waypoints.slice(1, waypoints.length - 1).map(toLatLng))
+                .query();
+    }
+</script>
+
+</body>
+</html>

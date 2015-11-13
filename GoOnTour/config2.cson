@@ -1,0 +1,33 @@
+"*":
+  "atom-ternjs": {}
+  editor:
+    invisibles: {}
+    fontSize: 12
+  core:
+    themes: [
+      "nucleus-dark-ui"
+      "gruvbox"
+    ]
+    disabledPackages: [
+      "tool-bar-almighty"
+    ]
+  "exception-reporting":
+    userId: "3189deb4-f6f8-2bd4-110a-1a5b39ca180c"
+  welcome:
+    showOnStartup: false
+  fonts:
+    fontFamily: "Hermit"
+  "tool-bar":
+    iconSize: "16px"
+    position: "Right"
+  "autohide-tree-view":
+    pushEditor: true
+    showPinButton: false
+  minimap:
+    displayMinimapOnLeft: true
+  linter:
+    showProviderName: false
+    showErrorPanel: false
+    gutterPosition: "Left"
+  "autocomplete-plus":
+    maxVisibleSuggestions: 20

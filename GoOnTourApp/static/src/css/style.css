@@ -1,0 +1,456 @@
+/*Stylesheet for the Roadi Application.*/
+
+
+html, body, main {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#trashCan {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+#map {
+  height: 100%;
+}
+
+#block {
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  bottom: 0;
+  background-color: #47612c;
+  border: 1px solid green;
+  opacity: .8;
+  z-index: 10;
+  transition-duration: 1.5s;
+
+}
+/*
+#block:hover {
+  height: 350px;
+  transition-duration: 1.5s;
+}
+
+#start {
+  margin-left: 50px;
+  margin-top: 35px;
+}
+
+#end {
+  margin-left: 50px;
+}*/
+
+#start_date {
+  top: 110px;
+}
+
+#end_date {
+  top: 150px;
+}
+
+#favArtist {
+  top: 190px;
+}
+
+
+#start, #end, #start_date, #end_date,
+#favArtist {
+  position: absolute;
+  border-radius: 7px;
+  border: none;
+  color: green;
+  background-color: #d3bea4;
+  height: 20px;
+  width: 130px;
+  border: 1px solid green;
+  left: 10px;
+  z-index: 100;
+
+}
+
+#keywords  {
+  top: 230px;
+  position: relative;
+  border-radius: 7px;
+  border: none;
+  color: green;
+  background-color: #d3bea4;
+  border: 1px solid green;
+  height: 20px;
+  width: 160px;
+  left: 10px;
+  z-index: 100;
+
+
+}
+
+#submit {
+  height: 22px;
+  width: 65px;
+  border-radius: 7px;
+  border: 1px solid #d3bea4;
+  background-color: transparent;
+  color: #d3bea4;
+  position: absolute;
+  left: 10px;
+  top: 270px;
+  z-index: 100;
+}
+
+#submit:hover {
+  background-color: white;
+  color: green;
+}
+
+#submit:active {
+  background-color: blue;
+  color: white;
+}
+
+#menu {
+  height: 54px;
+  width: 8px;
+  background-color: transparent;
+  color: #d3bea4;
+  border: none;
+  border-radius: 8px;
+  position: absolute;
+  top: 10px;
+  left: 2px;
+  opacity: .6;
+}
+
+#menu:hover {
+  color: red;
+}
+#menu:active {
+  color: white;
+}
+
+#engineButton {
+  height: 40px;
+  width: 110px;
+  background-color: transparent;
+  color: #d3bea4;
+  border: 1px solid #d3bea4;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom: none;
+  position: absolute;
+  top: 100px;
+  left: 35px;
+  opacity: .6;
+}
+#engineButton2 {
+  height: 40px;
+  width: 110px;
+  background-color: transparent;
+  color: #d3bea4;
+  border: 1px solid #d3bea4;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  position: absolute;
+  top: 140px;
+  left: 35px;
+  opacity: .6;
+}
+
+#killButton {
+  display: none;
+}
+#killButton2 {
+  display: none;
+}
+
+#engineButton:hover {
+  background-color: blue;
+  color: white;
+
+}
+
+#engineButton:active {
+  background-color: red;
+}
+#engineButton2:hover {
+  background-color: blue;
+  color: white;
+
+}
+
+#engineButton2:active {
+  background-color: red;
+}
+
+#zoomBackButton {
+  height: 50px;
+  width: 80px;
+  background-color: transparent;
+  color: #d3bea4;
+  border: 1px solid #d3bea4;
+  border-radius: 8px;
+  position: absolute;
+  top: 200px;
+  left: 50px;
+  opacity: .6;
+}
+#zoomBackButton:hover {
+  background-color: blue;
+  color: white;
+}
+#zoomBackButton:active {
+  background-color: red;
+}
+
+#killButton3 {
+  display: none;
+}
+
+.leaflet-popup {
+  border-radius: 10px;
+}
+
+
+
+/* Mapbox stuff */
+.mapbox-directions-routes {
+  max-height: 250px;
+}
+
+#inputs,
+#errors {
+    position: absolute;
+    width: 33.3333%;
+    max-width: 300px;
+    min-width: 200px;
+}
+
+#inputs {
+    z-index: 10;
+    top: 10px;
+    left: 45px;
+    opacity: 1;
+    /*display: none;*/
+}
+
+#directions {
+    z-index: 999;
+    background: rgba(0,0,0,.8);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color: #091423;
+    opacity: .8;
+    position: fixed;
+    width: 20px;
+    transition-duration: 1s;
+}
+
+/*
+#directions:hover {
+  width: 20%
+  max-width: 300px;
+  min-width: 200px;
+
+}*/
+
+#directions:hover .mapbox-directions-routes ul, {
+  display: inline-block;
+}
+
+#directions:hover .mapbox-directions-steps {
+  display: block;
+}
+
+
+#errors {
+    z-index: 8;
+    opacity: 0;
+    padding: 10px;
+    border-radius: 0 0 3px 3px;
+    background: rgba(0,0,0,.25);
+    top: 90px;
+    left: 10px;
+}
+
+.mapbox-improve-map {
+
+}
+
+.leaflet-control-attribution.leaflet-control {
+  display: none;
+}
+
+.mapbox-directions-profile {
+  background-color: black;
+  color: black;
+
+}
+
+.mapbox-form-label {
+  display: none;
+}
+
+.mapbox-directions-origin {
+  background-color: black;
+  color: white;
+  opacity: .9;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.mapbox-directions-destination {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: black;
+}
+
+.mapbox-directions-icon.mapbox-reverse-icon.mapbox-directions-reverse-input {
+  border-radius: 4px;
+}
+
+#color {
+  position: absolute;
+  width: 300px;
+  height: 80px;
+  background-color: #a87e45;
+  opacity: .5;
+  z-index: 999;
+  border-radius: 5px;
+  left: 45px;
+  top: 10px;
+  display: none;
+
+}
+
+.mapbox-directions-profile {
+  display: none;
+}
+
+.mapbox-directions-steps {
+  display: none;
+}
+
+#prevDay {
+  position: absolute;
+  bottom: -11px;
+  left: 22px;
+  padding-bottom: 3px;
+  color: #d3bea4;
+  pointer-events: none;
+}
+
+#prevDay:active {
+  color: red;
+}
+#pdtext {
+  color: #d3bea4;
+}
+
+
+#nextDay {
+  position: absolute;
+  top: -7px;
+  left: 25px;
+  padding-bottom: 3px;
+  color: #d3bea4;
+  pointer-events: none;
+}
+
+#nextDay:active {
+  color: red;
+}
+#ndtext {
+  position: absolute;
+  top: 95px;
+  left: 90px;
+  color: #d3bea4;
+  font-family: Helvetica Neue;
+  font-size: 10px;
+
+}
+
+#rocket {
+  color: #d3bea4;
+  pointer-events: none;
+}
+
+#ttPaneZoom {
+  position: absolute;
+  height: 60px;
+  width: 250px;
+  background-color: #091423;
+  opacity: .8;
+  border-radius: 7px;
+  color: #d3bea4;
+  left: 740px;
+  top: 60px;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+#ttPaneEngine {
+  position: absolute;
+  height: 90px;
+  width: 250px;
+  background-color: #091423;
+  opacity: .8;
+  border-radius: 7px;
+  color: #d3bea4;
+  left: 740px;
+  top: 60px;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+#ttPaneEngine2 {
+  position: absolute;
+  height: 90px;
+  width: 250px;
+  background-color: #091423;
+  opacity: .8;
+  border-radius: 7px;
+  color: #d3bea4;
+  left: 740px;
+  top: 60px;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+#cont {
+  background-color: white;
+  height: 20px;
+  width: 120px;
+  color: black;
+  position: absolute;
+  left: 20px;
+  top: 400px;
+  z-index: 600;
+}
+
+#mapLogo {
+  height: 125px;
+  width: 125px;
+  position: fixed;
+  z-index: 101;
+  left: 580px;
+  top: 10px;
+}
+#maplogo:active {
+  opacity: .5;
+}
