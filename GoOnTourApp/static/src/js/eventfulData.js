@@ -1,3 +1,5 @@
+
+
 // JavaScript Module for GoOnTour.org. Parses Eventful Data.
 'use strict';
 
