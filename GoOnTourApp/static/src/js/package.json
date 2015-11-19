@@ -2,6 +2,8 @@
   "name": "GoOnTour.org",
   "version": "0.0.0",
   "dependencies": {
+    "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
     "react-daterange-picker": "^0.12.2",
     "react-geocoder": "^2.5.0"
   }

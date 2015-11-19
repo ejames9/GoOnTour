@@ -15,7 +15,9 @@ var _homeSlice = require('./homeSlice');
 
 var _reactDateRangePicker2 = require('./reactDateRangePicker2');
 
-var React = require('react/addons');
+var React = require('react/addons'),
+    j = require('jquery');
+require('jquery-ui');
 
 var conStructionModule = (function () {
 
@@ -162,6 +164,7 @@ var conStructionModule = (function () {
       var newHTML = this.responseText;
 
       var lines = (0, _alias.dom)('#lines');
+      (0, _alias.log)(lines);
       var bundle = (0, _alias.dom)('#bundle');
       var main = (0, _alias.dom)('main');
       var trashCan = (0, _alias.dom)('#trashCan');
@@ -175,8 +178,11 @@ var conStructionModule = (function () {
       (0, _alias.kill)('#trashCan');
       main.innerHTML = newHTML;
 
-      var reactDRP = React.createFactory(_reactDateRangePicker2.DatePicker);
-      React.render(reactDRP(), (0, _alias.dom)('#app'));
+      var reactDRP = React.createElement(_reactDateRangePicker2.DatePicker);
+      React.render(reactDRP, (0, _alias.dom)('#app'));
+      j('#gel').css('display', 'block');
+      j('#directions, #block, #keywords, #submit').css('display', 'none');
+      j('#mapLogo').css('opacity', '.7');
 
       if (coordinates !== 0) {
         //NOTE Removed this assignment => userCoords = coordinates;

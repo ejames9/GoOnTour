@@ -8,7 +8,11 @@ import { homeSliceModule as Home } from './homeSlice';
 import { DatePicker } from './reactDateRangePicker2';
 
 
-var React = require('react/addons');
+
+var React = require('react/addons'),
+      j = require('jquery');
+          require('jquery-ui');
+
 
 
 export const conStructionModule = (function() {
@@ -157,6 +161,7 @@ export const conStructionModule = (function() {
       var newHTML = this.responseText;
 
       var lines    = dom('#lines');
+      log(lines);
       var bundle   = dom('#bundle');
       var main     = dom('main');
       var trashCan = dom('#trashCan');
@@ -170,11 +175,14 @@ export const conStructionModule = (function() {
           kill('#trashCan');
           main.innerHTML = newHTML;
 
-      var reactDRP = React.createFactory(DatePicker);
+      var reactDRP = React.createElement(DatePicker);
           React.render(
-            reactDRP(),
+           reactDRP,
             dom('#app')
          );
+         j('#gel').css('display', 'block');
+         j('#directions, #block, #keywords, #submit').css('display', 'none');
+         j('#mapLogo').css('opacity', '.7');
 
       if (coordinates !== 0) {  //NOTE Removed this assignment => userCoords = coordinates;
         log('!0');

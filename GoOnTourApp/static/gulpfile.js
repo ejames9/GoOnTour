@@ -3,6 +3,7 @@
 //// Configuration /////
 
 var gulp = require('gulp');
+var notify = require('gulp-notify');
 var jshint = require('gulp-jshint');
 var changed = require('gulp-changed');
 var imagemin = require('gulp-imagemin');
@@ -76,6 +77,7 @@ gulp.task('webpack2', function() {
       jsDst    = './build/js/';
   return gulp.src(jsSrc)
     .pipe(compiler)
+    .pipe(notify('Scripts Bundled.'))
     .pipe(gulp.dest(jsDst));
 });
 
@@ -93,7 +95,7 @@ gulp.task('transbundle', function() {
   runSequence('babel', 'webpack');
 });
 gulp.task('JS', function() {
-  runSequence('babel', 'webpack', 'webpack2', 'indexJS');
+  runSequence('babel', 'webpack', 'webpack2');
 });
 
 
@@ -115,9 +117,10 @@ gulp.task('imagemin', function() {
 gulp.task('build-html', function() {
   var htmlSrc = '../templates/src/*.html',
       htmlDst = '../templates/build/';
-  gulp.src(htmlSrc)
+  return gulp.src(htmlSrc)
     .pipe(changed(htmlDst))
     .pipe(minifyHtml())
+    .pipe(notify('Template Built.'))
     .pipe(gulp.dest(htmlDst));
 });
 
@@ -139,6 +142,7 @@ gulp.task('final-styles', function() {
       cssDst = './build/index/';
   return gulp.src(cssSrc)
     .pipe(conCat('GoOnTour.css'))
+    .pipe(notify('CSS Ready.'))
     .pipe(gulp.dest(cssDst));
 });
 gulp.task('CSS', function() {
@@ -151,7 +155,7 @@ gulp.task('default', function() {
   runSequence('imagemin', 'build-html', 'CSS', 'JS');
 
   // Watch for changes in DatePicker jsx
-  gulp.watch('./src/prejs/reactDateRangePicker.jsx', function() {
+  gulp.watch('./src/prejs/reactDateRangePicker2.jsx', function() {
     gulp.run('JS');
   });
 

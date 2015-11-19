@@ -144,9 +144,4 @@ var _xhr = function xhr(data, url, callback, method) {
 
   return response;
 };
-
 exports.xhr = _xhr;
-//
-// var formData = new FormData();
-//     formData.append('reload', 'homeMain.html');
-// xhr(formData, '', )

@@ -59,7 +59,7 @@ var goOnTourMapsModule = (function () {
   };
 
   var initMap = function initMap(coords) {
-    console.log('init1');
+    (0, _alias.log)('init1');
     if (mapHashBool === true) {
       window.location.hash = '#map';
       mapHashBool = false;

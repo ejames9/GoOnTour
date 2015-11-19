@@ -44,6 +44,7 @@ html, body, main {
   margin-left: 50px;
 }*/
 
+
 #start_date {
   top: 110px;
 }
@@ -447,9 +448,9 @@ html, body, main {
   height: 125px;
   width: 125px;
   position: fixed;
-  z-index: 101;
-  left: 580px;
-  top: 10px;
+  z-index: 1001;
+  left: 44%;
+  top: 2%;
 }
 #maplogo:active {
   opacity: .5;
