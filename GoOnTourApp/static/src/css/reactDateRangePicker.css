@@ -1,45 +1,77 @@
 
+#gel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  opacity: .8;
+  z-index: 997;
+  display: none;
+  font-family: Architects Daughter;
 
+}
+#gelText {
+  position: absolute;
+  left: 30%;
+  top: 25%;
+  color: white;
+  font-size: 28px;
+}
 
 
 #app {
   position: fixed;
-  left: 26%;
-  top: 28%;
-  background-color: lightblue;
-  opacity: .9;
+  left: 25%;
+  top: 35%;
+  opacity: 1;
   border-radius: 10px;
-  font-family: Indie Flower;
+  font-family: Architects Daughter;
+  color: white;
   /*display: none;*/
   z-index: 999;
-
-
 }
+#calPane {
+  position: absolute;
+  z-index: 998;
+  height: 310px;
+  width: 625px;
+  background-color: grey;
+  border: 1px solid white;
+  border-radius: 10px;
+  opacity: .7;
+  left: 25%;
+  top: 35%;
+}
+
 
 .drpInputS {
   background-color: transparent;
-  font-family: Indie Flower;
-  font-size: 15px;
+  font-family: Architects Daughter;
+  font-size: 20px;
   position: absolute;
-  border: 1px solid black;
-  border-radius: 7px;
-  height: 17px;
-  width: 120px;
-  left: 120px;
-  bottom: 10px;
+  border: 1px solid white;
+  color: white;
+  border-radius: 12px;
+  height: 30px;
+  width: 190px;
+  left: -230px;
+  bottom: 80px;
 }
 
 .drpInputE {
   background-color: transparent;
-  font-family: Indie Flower;
-  font-size: 15px;
+  font-family: Architects Daughter;
+  font-size: 20px;
   position: absolute;
-  border: 1px solid black;
-  border-radius: 7px;
-  height: 17px;
-  width: 120px;
-  left: 380px;
-  bottom: 10px;
+  border: 1px solid white;
+  color: white;
+  border-radius: 12px;
+  height: 30px;
+  width: 190px;
+  right: -230px;
+  bottom: 80px;
 }
 
 
@@ -110,15 +142,15 @@
       border-right: 8px solid transparent;
       left: 11px; }
   .DateRangePicker__Month {
-    color: #333;
+    color: white;
     display: inline-block;
     margin: 0 20px;
     position: relative;
     user-select: none;
     width: 275px; }
   .DateRangePicker__MonthHeader {
-    color: #000;
-    font-size: 14px;
+    color: white;
+    font-size: 16px;
     font-weight: bold;
     height: 35px;
     line-height: 35px;
@@ -141,24 +173,25 @@
     width: 100%;
     z-index: 5; }
   .DateRangePicker__MonthDates {
-    border-bottom: 1px solid #f4f5f6;
+    border-bottom: 1px solid black;
     border-collapse: separate;
     border-spacing: 0 1px;
     margin: 0;
     width: 100%; }
   .DateRangePicker__WeekdayHeading, .DateRangePicker__Date {
     font-size: 12px;
+    color: white;
     line-height: 1;
     padding: 10px 0;
     text-align: center;
     width: 14.285714285714286%; }
   .DateRangePicker__WeekdayHeading {
-    border-bottom: 1px solid #f4f5f6;
+    border-bottom: 1px solid black;
     color: #000;
     font-weight: bold; }
     .DateRangePicker__WeekdayHeading abbr[title] {
       border-bottom-width: 0;
-      color: #000;
+      color: white;
       cursor: pointer;
       font-size: inherit;
       text-decoration: none; }
@@ -171,11 +204,13 @@
     .DateRangePicker__Date:first-child {
       border-left-width: 1px; }
     .DateRangePicker__Date--weekend {
-      background-color: #f6f7f9; }
+      background-color: #f6f7f9;
+      color: black;
+     }
     .DateRangePicker__Date--otherMonth {
       opacity: .25; }
     .DateRangePicker__Date--is-disabled {
-      color: #cdcdd1;
+      color: blue;
       cursor: default; }
     .DateRangePicker__Date--is-selected {
       color: #fff; }
@@ -192,8 +227,8 @@
       left: 50%;
       right: 0; }
   .DateRangePicker__CalendarSelection {
-    background-color: #ed5434;
-    border: 1px solid #eb401d;
+    background-color: #47612c;
+    border: 1px solid #47612c;
     bottom: 5px;
     left: 0;
     position: absolute;
@@ -218,8 +253,8 @@
       border-radius: 5px;
       left: 5px;
       right: 5px; }
-    .DateRangePicker__CalendarSelection--is-pending {
-      background-color: rgba(237, 84, 52, 0.75);
+    .DateRangePicker__CalendarSelection--is-pending {     /* pending selection highlight color */
+      background-color: grey;
       border-width: 0; }
   .DateRangePicker__CalendarHighlight {
     background-color: rgba(255, 255, 255, 0.25);
@@ -245,8 +280,8 @@
       border-left-width: 0;
       border-right-width: 0; }
     .DateRangePicker__CalendarHighlight--single {
-      background-color: #fff;
-      border: 1px solid #eb401d;
+      background-color: yellow;
+      border: 1px solid yellow;   /*#eb401d;*/
       border-radius: 5px;
       left: 5px;
       right: 5px; }

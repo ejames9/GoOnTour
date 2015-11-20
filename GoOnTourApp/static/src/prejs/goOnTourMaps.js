@@ -55,7 +55,7 @@ export const goOnTourMapsModule = (function() {
   };
 
   var initMap = function(coords) {
-    console.log('init1');
+    log('init1');
     if (mapHashBool === true) {
   		window.location.hash = '#map';
   		mapHashBool = false;

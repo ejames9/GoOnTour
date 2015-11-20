@@ -22,8 +22,10 @@ var _reactDaterangePicker = require('react-daterange-picker');
 
 var _reactDaterangePicker2 = _interopRequireDefault(_reactDaterangePicker);
 
-var DatePickerRange = _reactAddons2['default'].createClass({
-  displayName: 'DatePickerRange',
+var _alias = require('./alias');
+
+var DatePicker = _reactAddons2['default'].createClass({
+  displayName: 'DatePicker',
 
   getInitialState: function getInitialState() {
     return {
@@ -33,14 +35,20 @@ var DatePickerRange = _reactAddons2['default'].createClass({
   },
 
   handleSelect: function handleSelect(value, states) {
-    this.setState({ value: value, states: states });
+    this.setState({ value: value, states: states });(0, _alias.log)(value);
   },
 
   render: function render() {
     return _reactAddons2['default'].createElement(
       'div',
       null,
-      _reactAddons2['default'].createElement(_reactDaterangePicker2['default'], _extends({}, this.props, { onSelect: this.handleSelect, value: this.state.value })),
+      _reactAddons2['default'].createElement(_reactDaterangePicker2['default'], _extends({}, this.props, {
+        firstOfWeek: 1,
+        numberOfCalendars: 2,
+        selectionType: 'range',
+        minimumDate: new Date(),
+        onSelect: this.handleSelect,
+        value: this.state.value })),
       _reactAddons2['default'].createElement(
         'div',
         null,
@@ -56,56 +64,6 @@ var DatePickerRange = _reactAddons2['default'].createClass({
           placeholder: 'End date' })
       )
     );
-  }
-});
-
-var DatePicker = _reactAddons2['default'].createClass({
-  displayName: 'DatePicker',
-
-  getDefaultProps: function getDefaultProps() {
-    return {};
-  },
-
-  render: function render() {
-    var stateDefinitions = {
-      available: {
-        color: '#ffffff',
-        label: 'Available'
-      },
-      enquire: {
-        color: '#ffd200',
-        label: 'Enquire'
-      },
-      unavailable: {
-        selectable: false,
-        color: '#78818b',
-        label: 'Unavailable'
-      }
-    };
-
-    var dateRanges = [{
-      state: 'enquire',
-      range: _moment2['default'].range((0, _moment2['default'])().add(2, 'weeks').subtract(5, 'days'), (0, _moment2['default'])().add(2, 'weeks').add(6, 'days'))
-    }, {
-      state: 'unavailable',
-      range: _moment2['default'].range((0, _moment2['default'])().add(3, 'weeks'), (0, _moment2['default'])().add(3, 'weeks').add(5, 'days'))
-    }];
-
-    var initialStart = (0, _moment2['default'])().add(1, 'weeks').startOf('day');
-    var initialEnd = (0, _moment2['default'])().add(1, 'weeks').add(3, 'days').startOf('day');
-
-    return _reactAddons2['default'].createElement(DatePickerRange, {
-      firstOfWeek: 1,
-      numberOfCalendars: 2,
-      selectionType: 'range',
-      minimumDate: new Date(),
-      maximumDate: (0, _moment2['default'])().add(2, 'years').toDate(),
-      stateDefinitions: stateDefinitions,
-      dateStates: dateRanges,
-      defaultState: 'available',
-      value: _moment2['default'].range(initialStart, initialEnd),
-      showLegend: true
-    });
   }
 });
 exports.DatePicker = DatePicker;
