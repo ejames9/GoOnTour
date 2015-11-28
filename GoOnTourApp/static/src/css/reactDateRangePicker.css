@@ -1,4 +1,7 @@
 
+#calContainer {
+  display: none;
+}
 #gel {
   position: absolute;
   left: 0;
@@ -15,11 +18,131 @@
 #gelText {
   position: absolute;
   left: 30%;
-  top: 25%;
+  top: 28%;
   color: white;
   font-size: 28px;
 }
 
+.favArtist-input {
+  position: absolute;
+  left: 28.5%;
+  top: 39%;
+  height: 45px;
+  width: 550px;
+  border: 1px solid white;
+  border-radius: 6px;
+  color: white;
+  font-size: 26px;
+  background-color: transparent;
+  font-family: Architects Daughter;
+}
+
+
+.favArtist-input-fx {
+  position: absolute;
+  left: 28.5%;
+  top: 39%;
+  height: 45px;
+  width: 550px;
+  border: 1px solid white;
+  border-radius: 6px;
+  color: black;
+  font-size: 26px;
+  background-color: transparent;
+  font-family: Architects Daughter;
+  text-shadow: 1px 0px 0px #686868, 1px 1px 0px #686868, 0px 1px 0px #686868,
+    -1px 1px 0px #686868, -1px 0px 0px #686868, -1px -1px 0px #686868,
+    0px -1px 0px #686868, 1px -1px 0px #686868, 1px 4px 5px #aeaeae;
+}
+
+
+.date-range-submit {
+  position: absolute;
+  height: 30px;
+  width: 140px;
+  border: 1px solid #b43717;
+  border-radius: 12px;
+  background-color: #b43717;
+  left: 43.5%;
+  bottom: 10%;
+  color: white;
+  font-size: 20px;
+  font-family: Architects Daughter;
+}
+.date-range-submit:hover {
+  border: 1px solid yellow;
+}
+.date-range-submit:active {
+  border: 1px solid blue;
+  background-color: blue;
+  color: white;
+}
+.label-container {
+	position: absolute;
+	left: 27.5%;
+	top: 51.5%;
+	width: 700px;
+  height: 60px;
+}
+
+.label-container span {
+  display: inline-block;
+  margin-right: 55px;
+  color: white;
+}
+
+.checkbox-container {
+	position: absolute;
+	left: 28.5%;
+	top: 54%;
+}
+
+label {
+  color: white;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  margin-right: 75px;
+  font-size: 13px;
+}
+label:before {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 40px;
+  position: absolute;
+  left: 50%;
+  bottom: 20%;
+  border: 1px solid white;
+  background-color: transparent;
+  box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+}
+
+
+input[type=checkbox] {
+  display: none;
+  color: white;
+}
+.checkbox-container label:before {
+  display: block;
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  border-radius: 25px;
+}
+input[type=checkbox]:checked + label:before {
+  content: "\2669";
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+  font-size: 40px;
+  color: white;
+  text-align: center;
+  line-height: 15px;
+  left: 50%;
+	top:70%;
+}
 
 #app {
   position: fixed;

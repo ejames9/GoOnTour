@@ -24,6 +24,7 @@ var minifyCSS = require('gulp-minify-css');
 
 
 var webpackConfig1 = {
+  target: 'webworker',
   entry: './src/js/reactDateRangePicker2.js',
   output: {
     filename: 'reactDateRangePickerBundle.js'
@@ -31,6 +32,7 @@ var webpackConfig1 = {
 };
 
 var webpackConfig2 = {
+  target: 'webworker',
   entry: './src/js/initiate.js',
   output: {
     filename: 'GoOnTour.js'
@@ -82,7 +84,7 @@ gulp.task('webpack2', function() {
 });
 
 gulp.task('indexJS', function() {
-  var jsSrc = ['./build/js/GoOnTour.js', './build/js/reactDateRangePickerBundle.js'],
+  var jsSrc = './build/js/*.js',
       jsDst = './build/index/';
   return gulp.src(jsSrc)
     .pipe(conCat('GoOnTourIndex.js'))

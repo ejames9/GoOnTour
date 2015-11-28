@@ -1,6 +1,5 @@
 
-//conStruction.js JavaScript Module for GoOnTour.org. Deals mainly with DOM Elements.
-
+//conStruction.js JavaScript Module for GoOnTour.org. Deals mainly with building UI.
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -13,17 +12,17 @@ var _goOnTourMaps = require('./goOnTourMaps');
 
 var _homeSlice = require('./homeSlice');
 
-var _reactDateRangePicker2 = require('./reactDateRangePicker2');
+var _eventfulData = require('./eventfulData');
 
-var React = require('react/addons'),
-    j = require('jquery');
+var without = require('lodash/array/without'),
+    _ = require('jquery');
 require('jquery-ui');
 
 var conStructionModule = (function () {
 
   var artistPics;
   var venuePics;
-  var el;
+  var elem;
   var refreshIntervalId;
   var toolTipsPane;
   var id;
@@ -163,8 +162,7 @@ var conStructionModule = (function () {
     xhr.onloadend = function () {
       var newHTML = this.responseText;
 
-      var lines = (0, _alias.dom)('#lines');
-      (0, _alias.log)(lines);
+      var lines = (0, _alias.dom)('#lines');(0, _alias.log)(lines);
       var bundle = (0, _alias.dom)('#bundle');
       var main = (0, _alias.dom)('main');
       var trashCan = (0, _alias.dom)('#trashCan');
@@ -172,17 +170,14 @@ var conStructionModule = (function () {
       if (lines !== null) {
         (0, _alias.kill)(lines);
       }
-      // if (bundle !== null) {
-      //   kill(bundle);
-      // }
       (0, _alias.kill)('#trashCan');
       main.innerHTML = newHTML;
 
-      var reactDRP = React.createElement(_reactDateRangePicker2.DatePicker);
-      React.render(reactDRP, (0, _alias.dom)('#app'));
-      j('#gel').css('display', 'block');
-      j('#directions, #block, #keywords, #submit').css('display', 'none');
-      j('#mapLogo').css('opacity', '.7');
+      _('#calContainer').css('display', 'block');
+      _('#gel').after(_('#calContainer'));
+      _('#gel').css('display', 'block');
+      _('#directions, #block, #keywords, #submit').css('display', 'none');
+      _('#mapLogo').css('opacity', '.7');
 
       if (coordinates !== 0) {
         //NOTE Removed this assignment => userCoords = coordinates;
@@ -229,6 +224,96 @@ var conStructionModule = (function () {
     xhr.send(formData);
   };
 
+  var showSearchOperations = function showSearchOperations() {
+    // Using a closure here to group search operation functions together,
+    //  and also utilizing the resulting namespace for userData, so as
+    // to avoid using a global variable.
+    var userData = {};
+    userData.searchParameters = { startDate: null, endDate: null };(0, _alias.log)(userData);
+    userData.searchParameters.genres = [];
+    var genre,
+        displayGenres = [],
+        genres = userData.searchParameters.genres;
+
+    var _collectKeywords = function _collectKeywords() {
+      _eventfulData.eventfulDataModule.getData(userData);
+    };
+
+    var _collectFavArtistGetGenres = function _collectFavArtistGetGenres() {
+      var favArtist = _('.favArtist-input').val();
+
+      userData.searchParameters.favArtist = favArtist;(0, _alias.log)(userData.searchParameters.favArtist);
+
+      _('<div class="checkbox-container">' + '<input id="checkbox1" class="checkbox" type="checkbox" name="checkbox1" value="Jam Bands">' + '<label for="checkbox1" data-value="l"></label>' + '<input id="checkbox2" class="checkbox" type="checkbox" name="checkbox2" value="Jazz">' + '<label for="checkbox2" value=""></label>' + '<input id="checkbox3" class="checkbox" type="checkbox" name="checkbox3" value="Funk">' + '<label for="checkbox3" value=""></label>' + '<input id="checkbox4" class="checkbox" type="checkbox" name="checkbox4" value="Rock">' + '<label for="checkbox4" value=""></label>' + '<input id="checkbox5" class="checkbox" type="checkbox" name="checkbox5" value="Blues">' + '<label for="checkbox5" value=""></label>' + '<input id="checkbox6" class="checkbox" type="checkbox" name="checkbox6" value="Bluegrass">' + '<label for="checkbox6" value=""></label>' + '</div>').appendTo(_('#gel'));
+
+      _('<div class="label-container">' + '<span class="labels">Jam Bands</span>' + '<span class="labels">Jazz</span>' + '<span class="labels">Funk</span>' + '<span class="labels">Rock</span>' + '<span class="labels">Blues</span>' + '<span class="labels">Bluegrass</span>' + '</div>').prependTo('#gel');
+
+      _('.favArtist-input').val('').prop('readonly', true).addClass('favArtist-input-fx');
+      _('#gelText').html('What are your favorite genres?').css('left', '29%');
+      // _('<span>')_
+      //         .addClass('style-instructions')
+      //         .appendTo('#gel')
+      //         .html('Separate genre keywords by a comma and space, please.')
+      _('.date-range-submit').html('find shows!').css('top', '68.5%').off('click', _collectFavArtistGetGenres).on('click', _collectKeywords);
+
+      _('.checkbox').get().forEach(function (el) {
+        (0, _alias.on)('click', el, function (el) {
+          var value = el.target.value;(0, _alias.log)(value);(0, _alias.log)(genres);
+          if (genres.indexOf(value) === -1) {
+            displayGenres.push(' ' + value);
+            genres.push(value);
+            _('.favArtist-input').val(displayGenres);
+          } else {
+            genre = ' ' + value;
+            displayGenres = without(displayGenres, genre);
+            genres = without(genres, value);
+            _('.favArtist-input').val(displayGenres);
+          }
+        });
+      });
+    };
+
+    var _killCalendarsBuildFavArtistInput = function _killCalendarsBuildFavArtistInput() {
+      _('#calContainer').remove();
+      _('#gelText').html('Who is your favorite Artist/band?').css({ fontSize: '36px', left: '28%' });
+      _("<input type='text'>").addClass('favArtist-input').appendTo(_('#gel'));
+      _('.date-range-submit').off('click', _submitFunction).on('click', _collectFavArtistGetGenres).css({ top: '55%' });
+    };
+
+    var _submitFunction = function _submitFunction() {
+      var start = userData.searchParameters.startDate,
+          end = userData.searchParameters.endDate;
+
+      if (start || end === null) {
+        userData.searchParameters.startDate = _('.drpInputS').val();
+        userData.searchParameters.endDate = _('.drpInputE').val();
+
+        var startDate = userData.searchParameters.startDate,
+            endDate = userData.searchParameters.endDate;
+        // alert('from ' + startDate + ' to ' + endDate);
+
+        _killCalendarsBuildFavArtistInput();
+      } else {
+        userData.searchParameters.favArtist = _('#favArtist').val();
+        userData.searchParameters.keywords = _('#keywords').val();
+
+        var favArtist = userData.searchParameters.favArtist,
+            keywords = userData.searchParameters.keywords;
+
+        alert(favArtist, keywords);
+      }
+    };
+
+    var elems = _('.date-range-submit');(0, _alias.log)(elems);
+
+    if (elems.length === 0) {
+      _('<button>') //create/append submit button,
+      .addClass('date-range-submit') //set up event listener for callback Function
+      .appendTo(_('#gel')) //define callback
+      .html('Submit').on('click', _submitFunction);
+    }
+  };
+
   return {
     forHash: forHash,
     buildButtons: buildButtons,
@@ -236,7 +321,8 @@ var conStructionModule = (function () {
     displayFlickrPhotos: displayFlickrPhotos,
     closeFooterAndKillPics: closeFooterAndKillPics,
     loadMap: loadMap,
-    homeReload: homeReload
+    homeReload: homeReload,
+    showSearchOperations: showSearchOperations
   };
 })();
 exports.conStructionModule = conStructionModule;

@@ -3,8 +3,9 @@
 // JavaScript Module for GoOnTour.org. Parses Eventful Data.
 import { dom, log } from './alias';
 import { goOnTourMapsModule as Map } from './goOnTourMaps';
+import moment from 'moment';
 
-var moment = require('moment');
+
 
 export const eventfulDataModule = (function() {
 
@@ -15,35 +16,40 @@ export const eventfulDataModule = (function() {
   var eventsArray;
   var eArray;
   var userLocale;
+  var searchParameters;
 
 
-  var getEventfulDataForMarkers = function() {
-    var what = dom('#favArtist').value;
-        keywords = dom('#keywords').value;
+  var getEventfulDataForMarkers = function(userData) {
+    var user = userData.searchParameters;
+    var what = user.favArtist;
+        user.genres.unshift(user.favArtist);
+        keywords = user.genres.join(' || ');
+        log(keywords);
         if (typeof startDate === 'undefined') {
-          startDate = dom('#start_date').value;      log(startDate);
+          startDate = user.startDate;      log(startDate);
         } else {
           startDate = startDate;
         }
         if (typeof endDate === 'undefined') {
-          endDate = dom('#end_date').value;       log(endDate);
+          endDate = user.endDate;       log(endDate);
         } else {
           endDate = endDate;
         }
         searchParameters = {
           app_key: "hQBcbKnVd94BDtCc",
-             what: what,
-         keywords: getKeywords(keywords),
+             what: '',
+         keywords: keywords,
          // where: '',
            within: 2000,
-             when: newGetWhen(startDate),
+             when: getFormattedWhen(startDate, endDate),
         page_size: 200,
        sort_order: "popularity",
                 };
+                log(searchParameters);
     var formData = new FormData();
-        formData.append('keywords', getKeywords(keywords)) ;
-        formData.append('when', startDate);
-
+        formData.append('keywords', keywords);
+        formData.append('when', getFormattedWhen(startDate, endDate));
+                log(formData);
     var request = new XMLHttpRequest();
     var url     = "/api_eventful_query_results/";
 
@@ -61,9 +67,9 @@ export const eventfulDataModule = (function() {
   };
 
   var makeAPICallAndParseResults = function () {
-    EVDB.API.call("/events/search", searchParameters, function (oData) {
-      var objects = oData.events.event; log(objects);
-          object  = oData;
+    EVDB.API.call("/events/search", searchParameters, function (data) {
+      var objects = data.events.event;           log(data);
+          object  = data;
           eventsArray = [];
           for (var i = 0; i < objects.length; i++) {
             var events = [];
@@ -83,7 +89,7 @@ export const eventfulDataModule = (function() {
            eventsArray.push(e);
           }
       addDistanceFromUserToEventsArray(eventsArray);
-      var stringResult = JSON.stringify(oData);
+      var stringResult = JSON.stringify(data);
       var formData = new FormData();
       formData.append('result', stringResult);
       formData.append('keys', getKeywords(keywords));
@@ -123,12 +129,12 @@ export const eventfulDataModule = (function() {
       addDistanceFromUserToEventsArray(eventsArray);
   };
 
-  var newGetWhen = function(startDate) {
-    var formatWhen = startDate;
-        formatWhen = moment(formatWhen, 'MM-DD-YYYY').format('YYYYMMDD00');
-        log(formatWhen);
-           var newWhen = formatWhen + '-' + formatWhen;
-              return newWhen;
+  var getFormattedWhen = function(startDate, endDate) {
+    startDate = moment(startDate).format('YYYYMMDD00');
+      endDate = moment(endDate).format('YYYYMMDD00');
+
+    var formattedWhen = startDate + '-' + endDate; log('formwhen');log(formattedWhen);
+    return formattedWhen;
   };
 
   var createGeoJson = function(eArray) {
@@ -153,33 +159,33 @@ export const eventfulDataModule = (function() {
           object.properties['marker-color']  = "#444";
           object.properties['marker-size']   = "medium";
           object.properties['marker-symbol'] = "music";
-    geojson.push(object); log(geojson);
-    }
+    geojson.push(object);
+  }                                                             log(geojson);
     Map.toMap(geojson);
 
     return geojson;
   };
 
-  //Takes a string of keywords, separated by commas, and converts it into a format understood by the eventful API.
-  var getKeywords = function(keywords) {
-            keywords = keywords.split(',');
-            keywords = keywords.join(' ||');
-                   log(keywords);
-                return keywords;
-  }; // getKeywords("jam bands, rock, country, apples")
+  // //Takes a string of keywords, separated by commas, and converts it into a format understood by the eventful API.
+  // var getKeywords = function(keywords) {
+  //           keywords = keywords.split(',');
+  //           keywords = keywords.join(' ||');
+  //                  log(keywords);
+  //               return keywords;
+  //}; getKeywords("jam bands, rock, country, apples")
 
 
   //Use Formula Function to determine each event distance from the user, and add it to the eventsArray.
   var addDistanceFromUserToEventsArray = function(eventsArray) {
     if (typeof newDestination === 'undefined') {  //#TODO:20 need a solution for this global.
-      userLocale = map.getCenter();
+      log(map);
       for (var i = 0; i < eventsArray.length; i++) {
-        distance = getDistanceFromLatLon(userLocale.lat, userLocale.lng, eventsArray[i][9], eventsArray[i][10]);
+        var distance = getDistanceFromLatLon(map._initialCenter.lat, map._initialCenter.lng, eventsArray[i][9], eventsArray[i][10]);
         eventsArray[i].push(distance);
       }
     } else {
         for (var j = 0; j < eventsArray.length; j++) {
-          distance = getDistanceFromLatLon(newDestination.lat, newDestination.lng, eventsArray[j][9], eventsArray[j][10]);
+          var distance = getDistanceFromLatLon(newDestination.lat, newDestination.lng, eventsArray[j][9], eventsArray[j][10]);
                      eventsArray[j].push(distance);
       }
     }
@@ -213,14 +219,14 @@ export const eventfulDataModule = (function() {
                                               ;
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var d = R * c; // Distance in km
-        result = d * 0.621; // Convert to mi
+    var result = d * 0.621; // Convert to mi
         return result;
   };
 
   //Converts degrees to radians for Haversine function.
   var deg2rad = function(deg) {
     return deg * (Math.PI/180);
-  }
+  };
 
   return {
     getData: getEventfulDataForMarkers,

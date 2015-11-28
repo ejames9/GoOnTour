@@ -130,9 +130,9 @@ pre {
 .parallax {
   background-color: #cbdce0;
   perspective: 1px;
-  height: 100vh;
-  width: 1280px;
-  overflow-y: auto;
+  height: 100vh;      /* Set the height and width of this container   */
+  width: 1280px;      /* to the height and width of user's screen, so that */
+  overflow-y: auto;   /* elements aren't moved around upon resizing of window */
   overflow-x: hidden;
 }
 .parallax__layer {
@@ -143,9 +143,10 @@ pre {
   left: 0px;
 }
 .parallax__layer--stage {
-  position: absolute;
+  /*position: absolute;
   margin-left: 0px;
-  padding-left: 0px;
+  padding-left: 0px;*/
+  display: flex;
   top: 0%;
   width: 100%;
   z-index: 3;
@@ -161,7 +162,6 @@ pre {
   transform: translateZ(-8px) scale(11);
 }
 .parallax__layer--schrecca {
-
   display: flex;
   top: 730%;
   width: 100%;
@@ -182,11 +182,7 @@ pre {
   transform: translateZ(-15px) scale(16);
   z-index: 1;
 }
-#logo:hover {
-  opacity: .6;
-  width: 750px;
-  height: 750px;
-}
+
 
 /* Navigation Buttons ----------------------------------- */
 

@@ -2,7 +2,7 @@
 // Home Page Navigation
 import { put, dom, css, on, off, log, make, kill } from './alias';
 import { conStructionModule as Construct }  from './conStruction';
-// import { goOnTourMapsModule as Map } from './goOnTourMaps';
+import { goOnTourMapsModule as Map } from './goOnTourMaps';
 
 export var homeSliceModule =  (function() {
 

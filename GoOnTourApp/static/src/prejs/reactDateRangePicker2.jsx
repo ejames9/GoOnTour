@@ -2,7 +2,8 @@ import React from 'react/addons';
 import moment from 'moment';
 import {} from 'moment-range';
 import DateRangePicker from 'react-daterange-picker';
-import { log, make, css, kill, dom } from './alias';
+import { conStructionModule as Construct } from './conStruction';
+import { log, dom } from './alias';
 
 
 
@@ -16,7 +17,7 @@ export const DatePicker = React.createClass({
 
   handleSelect(value, states) {
     this.setState({value, states});    log(value);
-
+    Construct.showSearchOperations();
   },
 
   render() {

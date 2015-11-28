@@ -10,15 +10,15 @@ export var reactGeocoder = React.createClass({
   locText: null,
   element: null,
 
-  checkOverFlow: function(el) {
-    var elOverFlow = el.style.overflow;
+  checkOverFlow: function(l) {
+    var elOverFlow = l.style.overflow;
     if (!elOverFlow || elOverFlow === 'visible') {
-      el.style.overflow = 'hidden';
+      l.style.overflow = 'hidden';
     }
-    var isOverFlowing = el.clientWidth < el.scrollWidth ||
-    el.clientHeight < el.scrollHeight;
+    var isOverFlowing = l.clientWidth < l.scrollWidth ||
+    l.clientHeight < l.scrollHeight;
 
-    el.style.overflow = elOverFlow;
+    l.style.overflow = elOverFlow;
     return isOverFlowing;
   },
 

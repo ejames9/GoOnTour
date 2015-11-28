@@ -14,15 +14,16 @@ var moment = require('moment');
              require('mapbox.js');
              require('mapbox-directions.js');
 
+// var map;
 
 
 
-//#TODO:30 Implement Module Pattern, Create Singleton
+
+//#TODO:30 Implement Module Pattern.
 export const goOnTourMapsModule = (function() {
 
-  var map;
+
   var coords;
-  var mapBox = L.mapbox;
   var directions;
   var directionsArray = [];
   var markers;
@@ -35,7 +36,7 @@ export const goOnTourMapsModule = (function() {
   var bool3 = true;
   var mapHashBool = true;
 
-  mapBox.accessToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
+  L.mapbox.accessToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
 
 
   var getUserLatLng = function(position) {
@@ -47,7 +48,7 @@ export const goOnTourMapsModule = (function() {
   };
 
   var getUserCoordinates = function() {
-    map = mapBox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
+    map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
     if (navigator.geolocation) {   // Needs Cross-Browser Support
             log('log 4');
             navigator.geolocation.getCurrentPosition(getUserLatLng);
@@ -65,7 +66,7 @@ export const goOnTourMapsModule = (function() {
   	if (bool3) {
       // var key = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
       // mapBox.accessToken = key;
-  		map = mapBox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
+  		map = L.mapbox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
   	} else {
   		map.setView(uCoords, 7);
   	}

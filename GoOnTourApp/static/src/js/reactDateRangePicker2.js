@@ -22,6 +22,8 @@ var _reactDaterangePicker = require('react-daterange-picker');
 
 var _reactDaterangePicker2 = _interopRequireDefault(_reactDaterangePicker);
 
+var _conStruction = require('./conStruction');
+
 var _alias = require('./alias');
 
 var DatePicker = _reactAddons2['default'].createClass({
@@ -36,6 +38,7 @@ var DatePicker = _reactAddons2['default'].createClass({
 
   handleSelect: function handleSelect(value, states) {
     this.setState({ value: value, states: states });(0, _alias.log)(value);
+    _conStruction.conStructionModule.showSearchOperations();
   },
 
   render: function render() {

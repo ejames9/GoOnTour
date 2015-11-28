@@ -66,29 +66,32 @@ def api_flickr_query(request):
 
 @csrf_exempt
 def api_eventful_query_results(request):
-	if request.POST:
-		if 'keywords' in request.POST:
-			inquiry = request.POST['keywords'] + request.POST['when']
-			q = Query.objects.filter(text__exact=inquiry)
-			if len(q) > 0:
-				q = q[0]
-				query = Query.objects.get(pk=q.id)
-				r = query.entries.all()
-				return HttpResponse(r)
-			else:
-				query = Query()
-				query.text = inquiry
-				query.save()
-				return HttpResponse("Make API Call.")
-		else:
-			inquiry = request.POST['keys'] + request.POST['when']
-			query = Query.objects.get(text__exact=inquiry)
-			query_results = QueryResults()
-			query_results.query = query
-			query_results.result = request.POST['result']
-			# query_results.time = datetime.now()
-			query_results.save()
-			return HttpResponse("Saved query results.")
+    if request.POST:
+        print request.POST
+        if 'keywords' in request.POST:
+            inquiry = request.POST['keywords'] + request.POST['when']
+            q = Query.objects.filter(text__exact=inquiry)
+            if len(q) > 0:
+                print 'huh?'
+                q = q[0]
+                query = Query.objects.get(pk=q.id)
+                r = query.entries.all()
+                return HttpResponse(r)
+            else:
+                query = Query()
+                query.text = inquiry
+                query.save()
+                return HttpResponse("Make API Call.")
+        else:
+            inquiry = request.POST['keys'] + request.POST['when']
+            query = Query.objects.get(text__exact=inquiry)
+            query_results = QueryResults()
+            query_results.query = query
+            query_results.result = request.POST['result']
+            # query_results.time = datetime.now()
+            query_results.save()
+            return HttpResponse("Saved query results.")
+
 
 
 

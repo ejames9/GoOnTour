@@ -10,7 +10,7 @@ var _alias = require('./alias');
 
 var _conStruction = require('./conStruction');
 
-// import { goOnTourMapsModule as Map } from './goOnTourMaps';
+var _goOnTourMaps = require('./goOnTourMaps');
 
 var homeSliceModule = (function () {
 
@@ -82,7 +82,7 @@ var homeSliceModule = (function () {
       window.location.hash = '';
       homeHashBool = false;
     }
-    Map.mapHashBool = true;
+    _goOnTourMaps.goOnTourMapsModule.mapHashBool = true;
 
     var findShowsButton = (0, _alias.dom)('#circle');
     (0, _alias.log)(findShowsButton);

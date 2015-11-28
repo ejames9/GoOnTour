@@ -5,6 +5,31 @@ export var make = function(tag) {
   return document.createElement(tag);
 };
 
+export var dom = function(l) {
+  if (l[0] === '#') {
+    l = l.slice(1);
+    return document.getElementById(l);
+  } else if (l[0] === '.') {
+    l = l.slice(1);
+    return document.getElementsByClassName(l)[0];
+  } else {
+    return document.getElementsByTagName(l)[0];
+  }
+};
+
+export var query = function(l) {
+  if (l[0] === '#') {
+    l = l.slice(1);
+    return document.getElementById(l);
+  } else if (l[0] === '.') {
+    l = l.slice(1);
+    return document.getElementsByClassName(l);
+  } else {
+    return document.getElementsByTagName(l);
+  }
+};
+
+
 export var put = function(el, mom) {
   return mom.appendChild(el);
 };
@@ -26,17 +51,8 @@ export var kill = function(el) {
  }
 };
 
-export var dom = function(el) {
-  if (el[0] === '#') {
-    el = el.slice(1);
-    return document.getElementById(el);
-  } else if (el[0] === '.') {
-    el = el.slice(1);
-    return document.getElementsByClassName(el)[0];
-  } else {
-    return document.getElementsByTagName(el)[0];
-  }
-};
+
+
 
 export var css = function(el) {
   if (el[0] === '#') {
