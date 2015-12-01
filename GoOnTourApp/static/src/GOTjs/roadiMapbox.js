@@ -102,11 +102,11 @@ function initMap(coords) {
 	// 	var userLocation = [center1.lat, center1.lng];
 	// 	  console.log(center1.lat, center1.lng);
 	// 	    map.setView(userLocation);
-	// 	     directions
-	// 			     .setOrigin(L.latLng(center1.lat, center1.lng))
-	// 			     .setDestination(L.latLng(43.018217, -124.798284))
-	// 	       //.addWaypoint(0, L.latLng(44.018217, -122.798284))
-	// 			     .query();
+		    //  directions
+				//      .setOrigin(L.latLng(center1.lat, center1.lng))
+				//      .setDestination(L.latLng(43.018217, -124.798284))
+		    //    //.addWaypoint(0, L.latLng(44.018217, -122.798284))
+				//      .query();
 	// }, 800);
 
 	var calendar1 = new JsDatePick({

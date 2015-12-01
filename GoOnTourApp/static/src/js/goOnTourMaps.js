@@ -17,12 +17,15 @@ var _eventfulData = require('./eventfulData');
 var _homeSlice = require('./homeSlice');
 
 //CommonJS Modules
+var moment = require('moment'),
+    xorCrypt = require('xor-crypt'),
+    _ = require('jquery');
+// __ = require('lodash');
 require('leaflet');
-var moment = require('moment');
 require('mapbox.js');
 require('mapbox-directions.js');
-
-// var map;
+require('leaflet-markercluster');
+require('leaflet-locatecontrol');
 
 //#TODO:30 Implement Module Pattern.
 var goOnTourMapsModule = (function () {
@@ -32,8 +35,6 @@ var goOnTourMapsModule = (function () {
   var directionsArray = [];
   var markers;
   var cluster;
-  var center;
-  var zoom;
   var newDestination;
   var bool = true;
   var bool2 = true;
@@ -42,45 +43,47 @@ var goOnTourMapsModule = (function () {
 
   L.mapbox.accessToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
 
-  var getUserLatLng = function getUserLatLng(position) {
-    coords = [position.coords.longitude, position.coords.latitude];
-    bool3 = false;
-    console.log(coords);
-    initMap(coords);
-  };
+  var initiateMap = function initiateMap(coordinates, data) {
+    (0, _alias.log)(coordinates);(0, _alias.log)(data);
+    if (coordinates === null) {
+      map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
+      var userLocater = L.control.locate({
+        markerClass: L.circleMarker,
+        locateOptions: {
+          maxZoom: 8
+        }
+      }).addTo(map);
+      userLocater.start();
+      coords = coordinates;
 
-  var getUserCoordinates = function getUserCoordinates() {
-    map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
-    if (navigator.geolocation) {
-      // Needs Cross-Browser Support
-      (0, _alias.log)('log 4');
-      navigator.geolocation.getCurrentPosition(getUserLatLng);
-    }
-  };
+      setTimeout(function () {
+        var center = map.getCenter();
+        (0, _alias.log)('center' + center);
+        var coordinates = [center.lat, center.lng];
+        (0, _alias.log)(coordinates);
+        var userData = data;
+        userData.mapData = {};
+        userData.mapData.userCoordinates = coordinates;
 
-  var initMap = function initMap(coords) {
-    (0, _alias.log)('init1');
-    if (mapHashBool === true) {
-      window.location.hash = '#map';
-      mapHashBool = false;
-    }
-    var uCoords = [coords[1], coords[0]];
-    (0, _alias.log)(uCoords);
-    if (bool3) {
-      // var key = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
-      // mapBox.accessToken = key;
-      map = L.mapbox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
+        map.setView(coordinates);
+        initializeDirectionsAPI(userData);
+      }, 3000);
     } else {
-      map.setView(uCoords, 7);
+      var uCoords = [coordinates[1], coordinates[0]];
+      var userData = data;
+      userData.mapData = {};
+      userData.mapData.userCoordinates = uCoords;
+      map = L.mapbox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
+      initializeDirectionsAPI(userData);
     }
+    // var center = map.getCenter();
+    // var coords = [center.lat, center.lng],
+    //     marker = new L.Marker(coords, {
+    // 	draggable: true,
+    // 	    title: "I Fucking Did It!"
+    // });
+    // map.addLayer(marker);
 
-    var marker = new L.Marker(uCoords, {
-      draggable: true,
-      title: "I Fucking Did It manualDispatchChangeEvent!"
-    });
-    map.addLayer(marker);
-
-    (0, _alias.on)('click', '#submit', _eventfulData.eventfulDataModule.getData);
     (0, _alias.on)('click', '#menu', _conStruction.conStructionModule.buildMenus);
 
     // window.onhashchange = function() {
@@ -98,11 +101,31 @@ var goOnTourMapsModule = (function () {
     // 			}
     // 		}
     //  };
-    // //  initCalendars();
   };
 
-  var zoomBackOut = function zoomBackOut() {
-    map.setView(center, zoom);
+  var initializeDirectionsAPI = function initializeDirectionsAPI(userData) {
+    var userCoords = userData.mapData.userCoordinates;
+    var stringData = JSON.stringify(userData);
+    var encrypted = xorCrypt(stringData);
+
+    _('<input>').appendTo('#trashCan').attr('type', 'hidden').attr('id', 'data-bridge').attr('data-bridge', encrypted);
+
+    directions = new L.mapbox.directions();
+    directionsArray.push(directions);
+
+    var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
+    // var directionsInputControl = L.mapbox.directions.inputControl('inputs', directions).addTo(map);
+    var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', directions).addTo(map);
+    var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
+    var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions).addTo(map);
+
+    directions.setOrigin(L.latLng(userCoords[0], userCoords[1])).setDestination(L.latLng(43.018217, -124.798284))
+    //.addWaypoint(0, L.latLng(44.018217, -122.798284))
+    .query();
+  };
+
+  var zoomBackOut = function zoomBackOut(userData) {
+    map.setView(userData.mapData.currentCenter, userData.mapData.currentZoom);
   };
 
   var reRouteEngine = function reRouteEngine() {};
@@ -115,15 +138,15 @@ var goOnTourMapsModule = (function () {
     startDate = startDate.toString();
     (0, _alias.log)(dateArray[0], dateArray[1]);
     if (dateArray[0] != dateArray[1]) {
-      var newDirections = new mapBox.directions();
+      var newDirections = new L.mapbox.directions();
       directionsArray.unshift(newDirections);
-      var directionsRoutesControl = mapBox.directions.routesControl('routes', directionsArray[0]).addTo(map);
-      var newdirectionsLayer = mapBox.directions.layer(directionsArray[0], { routeStyle: { color: pathColorArray[Math.floor(Math.random() * 11)], weight: 4, opacity: 0.75 } }).addTo(map);
+      var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directionsArray[0]).addTo(map);
+      var newdirectionsLayer = L.mapmox.directions.layer(directionsArray[0], { routeStyle: { color: pathColorArray[Math.floor(Math.random() * 11)], weight: 4, opacity: 0.75 } }).addTo(map);
       directionsArray[0].setOrigin(L.latLng(newDestination)).setDestination(L.latLng(newDestination))
       //.addWaypoint(0, L.latLng(44.018217, -122.798284))
       .query();
 
-      getData();
+      _eventfulData.eventfulDataModule.getData();
 
       map.removeLayer(cluster);
       markerArray = [];
@@ -136,7 +159,10 @@ var goOnTourMapsModule = (function () {
     }
   };
 
-  var addGeoJsonMarkersBindEventInfo = function addGeoJsonMarkersBindEventInfo(geojson) {
+  var addGeoJsonMarkersBindEventInfo = function addGeoJsonMarkersBindEventInfo(geojson, userData) {
+    userData.mapData = {};
+    var mapData = userData.mapData;
+
     cluster = new L.MarkerClusterGroup();
     var markerStyle = {
       draggable: false,
@@ -170,7 +196,7 @@ var goOnTourMapsModule = (function () {
             var venuePhotos = JSON.parse(jsonArray[1]);
             console.log(artistPhotos);
             console.log(venuePhotos);
-            displayFlickrPhotos(artistPhotos, venuePhotos);
+            _conStruction.conStructionModule.displayPopupFooter(feature, artistPhotos, venuePhotos);
           };
           xhr.open('post', url);
           xhr.send(fData);
@@ -178,29 +204,37 @@ var goOnTourMapsModule = (function () {
         layer.on('dblclick', function (e) {
           newDestination = e.latlng;
           directionsArray[0].setDestination(newDestination).query();
+          routeEngine();
         });
       }
     });
     cluster.addLayer(markers);
+
     map.addLayer(cluster);
     map.fitBounds(cluster.getBounds());
     (0, _alias.css)('#block').height = '80px';
 
     setTimeout(function () {
-      center = map.getCenter();
-      zoom = map.getZoom();
+      var center = map.getCenter();
+      var zoom = map.getZoom();
+
+      userData.mapData.currentCenter = center;
+      userData.mapData.currentZoom = zoom;
     }, 800);
 
     if (bool2) {
-      buildButtons();
+      _('#directions, #block').css('display', 'block');
+      _('#mapLogo').css('opacity', '1');
+
+      (0, _alias.log)(userData);
+      _conStruction.conStructionModule.buildButtons(userData);
       bool2 = false;
     }
   };
 
   return {
-    getUser: getUserCoordinates,
-    initMap: initMap,
-    zoomOut: zoomBackOut,
+    initMap: initiateMap,
+    zoomBackOut: zoomBackOut,
     routeEngine: routeEngine,
     toMap: addGeoJsonMarkersBindEventInfo,
     bool: bool

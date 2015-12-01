@@ -15,6 +15,7 @@ var _homeSlice = require('./homeSlice');
 var _eventfulData = require('./eventfulData');
 
 var without = require('lodash/array/without'),
+    xorCrypt = require('xor-crypt'),
     _ = require('jquery');
 require('jquery-ui');
 
@@ -30,7 +31,7 @@ var conStructionModule = (function () {
   var forHash;
   var userCoords;
 
-  var buildButtons = function buildButtons() {
+  var buildButtons = function buildButtons(userData) {
     var direct = (0, _alias.dom)('#directions');
     var engineButton = (0, _alias.make)('button');
     engineButton.id = 'engineButton';
@@ -44,9 +45,13 @@ var conStructionModule = (function () {
     (0, _alias.put)(zoomBackButton, direct);
     (0, _alias.put)(engineButton, direct);
     (0, _alias.put)(engineButton2, direct);
-    (0, _alias.on)('click', engineButton, _goOnTourMaps.goOnTourMapsModule.routeEngine);
+    (0, _alias.on)('click', engineButton, function (userData) {
+      _goOnTourMaps.goOnTourMapsModule.routeEngine(userData);
+    });
     (0, _alias.on)('click', engineButton2, _goOnTourMaps.goOnTourMapsModule.reRouteEngine);
-    (0, _alias.on)('click', zoomBackButton, _goOnTourMaps.goOnTourMapsModule.zoomBackOut);
+    (0, _alias.on)('click', zoomBackButton, function () {
+      _goOnTourMaps.goOnTourMapsModule.zoomBackOut(userData);
+    });
     (0, _alias.on)('mouseover', engineButton, toolTips);
     (0, _alias.on)('mouseover', engineButton2, toolTips);
     (0, _alias.on)('mouseover', zoomBackButton, toolTips);
@@ -70,23 +75,48 @@ var conStructionModule = (function () {
     }
   };
 
-  var displayFlickrPhotos = function displayFlickrPhotos(artistPhotos, venuePhotos) {
-    (0, _alias.log)(artistPhotos);
-    artistPics = artistPhotos.photos.photo;(0, _alias.log)(artistPics);
+  var displayPopupFooter = function displayPopupFooter(feature, artistPhotos, venuePhotos) {
 
-    var i = Math.floor(Math.random() * 19);
-    var footer = (0, _alias.dom)('#block');
-    footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
+    var props = feature.properties;(0, _alias.log)('props');(0, _alias.log)(props);
+    var artistPics = artistPhotos.photos.photo;(0, _alias.log)(artistPics);
 
-    refreshIntervalId = setInterval(function () {
-      //NOTE This may not work.
-      // var artistPics = artistPhotos.photos.photo
-      var j = Math.floor(Math.random() * 19);
-      var footer = (0, _alias.dom)('#block');
-      (0, _alias.kill)('#id');
-      footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
-    }, 5000);
-    upFooter();
+    var _displayArtistShowInfo = function _displayArtistShowInfo(props) {
+      _('<span><h2>' + props.title + '</h2><br /><p>Performing at: <b>' + props.venueName + '</b><br />in <b>' + props.cityName + '</b></span>').appendTo('#block').css({ fontFamily: 'Architects Daughter', color: 'white', zIndex: '1001 ', position: 'absolute' }).attr('id', 'show-info');
+    };
+
+    var _upFooter = function _upFooter(props) {
+      (0, _alias.log)('hello');
+      var footer = (0, _alias.css)('#block');
+      if (footer.height === '80px') {
+        footer.height = '350px';
+        footer.opacity = '.9';
+      }
+    };
+
+    var _flickrPics = function _flickrPics(artistPics) {
+      (0, _alias.log)(artistPics.length);
+      if (artistPics.length > 0) {
+        _upFooter(props);
+        var i = Math.floor(Math.random() * 19);
+        var footer = (0, _alias.dom)('#block');
+        footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
+
+        refreshIntervalId = setInterval(function () {
+          //NOTE This may not work.
+          var artistPics = artistPhotos.photos.photo;
+          var j = Math.floor(Math.random() * 19);
+          var footer = (0, _alias.dom)('#block');
+          (0, _alias.kill)('#id');
+          footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
+        }, 5000);
+      }
+    };
+
+    if (artistPics.length > 0) {
+      _upFooter();
+      _flickrPics(artistPics);
+      _displayArtistShowInfo(props);
+    }
   };
 
   var closeFooterAndKillPics = function closeFooterAndKillPics() {
@@ -97,63 +127,62 @@ var conStructionModule = (function () {
     }
   };
 
-  var upFooter = function upFooter() {
-    (0, _alias.log)('hello');
-    var footer = (0, _alias.css)('#block');
-    if (footer.height === '80px') {
-      footer.height = '350px';
-      footer.opacity = '.9';
+  function toolTips(e) {
+    (0, _alias.log)('step1');(0, _alias.log)(id);
+    var source = e.target.id;(0, _alias.log)('tt');(0, _alias.log)(source);
+    toolTipsPane = (0, _alias.make)('div');
+    if (source === 'engineButton') {
+      if (typeof id !== 'undefined') {
+        (0, _alias.log)('undy');(0, _alias.log)(id);
+        var delPane = (0, _alias.dom)(id);
+        (0, _alias.log)(delPane);
+        if (delPane !== null) {
+          (0, _alias.log)('kill1');
+          (0, _alias.kill)(id);
+        }
+      }
+      toolTipsPane.innerHTML = 'Set Current Leg and Proceed to Next Day of Trip';
+      toolTipsPane.id = 'ttPaneEngine';
+      id = '#ttPaneEngine';
+    } else if (source === 'engineButton2') {
+      if (typeof id !== 'undefined') {
+        var delPane = (0, _alias.dom)(id);
+        (0, _alias.log)('id');(0, _alias.log)(id);
+        if (delPane !== null) {
+          (0, _alias.log)('kill2');
+          (0, _alias.kill)(id);
+        }
+      }
+      toolTipsPane.innerHTML = 'Erase Current Leg and Edit Previous Leg';
+      toolTipsPane.id = 'ttPaneEngine2';
+      id = '#ttPaneEngine2';
+    } else {
+      if (typeof id !== 'undefined') {
+        var delPane = (0, _alias.dom)(id);
+        if (delPane !== null) {
+          (0, _alias.log)('kill3');
+          (0, _alias.kill)(id);
+        }
+      }
+      (0, _alias.log)('hello yall!');
+      toolTipsPane.innerHTML = 'Zoom Back Out';
+      toolTipsPane.id = 'ttPaneZoom';
+      id = '#ttPaneZoom';
+    }
+    (0, _alias.put)(toolTipsPane, (0, _alias.dom)('#map'));
+    (0, _alias.log)('ttpane');
+    (0, _alias.log)(toolTipsPane);
+
+    if (toolTipsPane !== null) {
+      setTimeout(function () {
+        (0, _alias.log)('kill4');
+        (0, _alias.log)(toolTipsPane);
+        (0, _alias.dom)('#map').removeChild(toolTipsPane);
+      }, 3000); //NOTE May have problems with this function.
     }
   };
 
-  // function toolTips(e) {
-  //   var source = e.target.id;     log(source);
-  //       toolTipsPane = make('div');
-  //   if (source === 'engineButton') {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //         kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Set Current Leg and Proceed to Next Day of Trip';
-  //   toolTipsPane.id = 'ttPaneEngine';
-  //   id = '#ttPaneEngine';
-  //
-  //   } else if (source === 'engineButton2') {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //         kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Erase Current Leg and Edit Previous Leg';
-  //   toolTipsPane.id = 'ttPaneEngine2';
-  //   id = 'ttPaneEngine2';
-  //
-  //   } else {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //           kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Zoom Back Out';
-  //   toolTipsPane.id = 'ttPaneZoom';
-  //   id = 'ttPaneZoom';
-  //   }
-  //   put(toolTipsPane);
-  //   log(toolTipsPane);
-  //
-  //   if (toolTipsPane !== null) {
-  //     setTimeout(function() {
-  //        log(toolTipsPane);
-  //       kill(toolTipsPane);
-  //     }, 3000); //NOTE May have problems with this function.
-  //   }
-  // };
-
-  var loadMap = function loadMap(coordinates) {
+  var loadMap = function loadMap(coordinates, userData) {
     forHash = coordinates;(0, _alias.log)(coordinates);
 
     var xhr = new XMLHttpRequest();
@@ -182,10 +211,10 @@ var conStructionModule = (function () {
       if (coordinates !== 0) {
         //NOTE Removed this assignment => userCoords = coordinates;
         (0, _alias.log)('!0');
-        _goOnTourMaps.goOnTourMapsModule.initMap(coordinates);
+        _goOnTourMaps.goOnTourMapsModule.initMap(coordinates, userData);
       } else {
         (0, _alias.log)('0');
-        _goOnTourMaps.goOnTourMapsModule.getUser();
+        _goOnTourMaps.goOnTourMapsModule.initMap(null, userData);
       }
     };
     xhr.open('GET', url);
@@ -224,18 +253,20 @@ var conStructionModule = (function () {
     xhr.send(formData);
   };
 
-  var showSearchOperations = function showSearchOperations() {
+  var showSearchOperations = function showSearchOperations(data) {
     // Using a closure here to group search operation functions together,
     //  and also utilizing the resulting namespace for userData, so as
-    // to avoid using a global variable.
-    var userData = {};
-    userData.searchParameters = { startDate: null, endDate: null };(0, _alias.log)(userData);
+    var decryptedData = xorCrypt(data); // to avoid using a global variable.
+
+    var userData = JSON.parse(decryptedData);(0, _alias.log)('userData');(0, _alias.log)(userData);
+    userData.searchParameters = { 'startDate': null, 'endDate': null };
     userData.searchParameters.genres = [];
     var genre,
         displayGenres = [],
         genres = userData.searchParameters.genres;
 
     var _collectKeywords = function _collectKeywords() {
+      _('#gel').remove();
       _eventfulData.eventfulDataModule.getData(userData);
     };
 
@@ -318,7 +349,7 @@ var conStructionModule = (function () {
     forHash: forHash,
     buildButtons: buildButtons,
     buildMenus: buildMenus,
-    displayFlickrPhotos: displayFlickrPhotos,
+    displayPopupFooter: displayPopupFooter,
     closeFooterAndKillPics: closeFooterAndKillPics,
     loadMap: loadMap,
     homeReload: homeReload,

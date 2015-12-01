@@ -56,14 +56,6 @@ gulp.task('babel', function() {
     .pipe(gulp.dest(jsDst));
 });
 
-// gulp.task('babel2', function() {
-//   var jsSrc = './src/prejs/*.js',
-//       jsDst = './src/js/';
-//   return gulp.src(jsSrc)
-//     .pipe(babel())
-//     .pipe(gulp.dest(jsDst));
-// });
-
 gulp.task('webpack', function() {
   var compiler = gulpWebpack(webpackConfig1, webpack),
       jsSrc    = './src/js/reactDateRangePicker2.js',
@@ -97,7 +89,7 @@ gulp.task('transbundle', function() {
   runSequence('babel', 'webpack');
 });
 gulp.task('JS', function() {
-  runSequence('babel', 'webpack', 'webpack2');
+  runSequence('babel', 'webpack2');
 });
 
 

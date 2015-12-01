@@ -10,6 +10,14 @@
     ]
     disabledPackages: [
       "tool-bar-almighty"
+      "git-go"
+      "linter-xo"
+      "spell-check"
+      "terminal-plus"
+      "quick-editor"
+      "atom-html-preview"
+      "bottom-dock"
+      "clipboard-plus"
     ]
   "exception-reporting":
     userId: "3189deb4-f6f8-2bd4-110a-1a5b39ca180c"

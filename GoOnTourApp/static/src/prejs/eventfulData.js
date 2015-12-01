@@ -35,13 +35,16 @@ export const eventfulDataModule = (function() {
         } else {
           endDate = endDate;
         }
+
+    var formattedWhen = getFormattedWhen(startDate, endDate);
+
         searchParameters = {
           app_key: "hQBcbKnVd94BDtCc",
              what: '',
          keywords: keywords,
          // where: '',
            within: 2000,
-             when: getFormattedWhen(startDate, endDate),
+             when: formattedWhen,
         page_size: 200,
        sort_order: "popularity",
                 };
@@ -56,17 +59,17 @@ export const eventfulDataModule = (function() {
     request.onloadend = function () {
       if (this.responseText === "Make API Call.") {
         alert('Calling Eventful API.');
-        makeAPICallAndParseResults();
+        makeAPICallAndParseResults(formattedWhen, keywords, userData);
       } else {
        var data = JSON.parse(this.responseText); log(this.responseText, data);
-                      parseResults(data);
+                      parseResults(data, userData);
       }
     };
     request.open('post', url);
     request.send(formData);
   };
 
-  var makeAPICallAndParseResults = function () {
+  var makeAPICallAndParseResults = function (when, keys, userData) {
     EVDB.API.call("/events/search", searchParameters, function (data) {
       var objects = data.events.event;           log(data);
           object  = data;
@@ -88,12 +91,12 @@ export const eventfulDataModule = (function() {
                       e.push(objects[i].image);
            eventsArray.push(e);
           }
-      addDistanceFromUserToEventsArray(eventsArray);
+      addDistanceFromUserToEventsArray(eventsArray, userData);
       var stringResult = JSON.stringify(data);
       var formData = new FormData();
       formData.append('result', stringResult);
-      formData.append('keys', getKeywords(keywords));
-      formData.append('when', startDate);
+      formData.append('keys', keys);
+      formData.append('when', when);
 
       var request = new XMLHttpRequest();
       var url = "/api_eventful_query_results/";
@@ -106,7 +109,7 @@ export const eventfulDataModule = (function() {
     });
   };
 
-  var parseResults = function(data) {
+  var parseResults = function(data, userData) {
     var objects = data.events.event;            log(objects);
          eventsArray = [];
           for (var i = 0; i < objects.length; i++) {
@@ -126,7 +129,7 @@ export const eventfulDataModule = (function() {
                       e.push(objects[i].image);
             eventsArray.push(e);
           }
-      addDistanceFromUserToEventsArray(eventsArray);
+      addDistanceFromUserToEventsArray(eventsArray, userData);
   };
 
   var getFormattedWhen = function(startDate, endDate) {
@@ -137,7 +140,7 @@ export const eventfulDataModule = (function() {
     return formattedWhen;
   };
 
-  var createGeoJson = function(eArray) {
+  var createGeoJson = function(eArray, userData) {
     var geojson = [];
     for (var i = 0; i < eArray.length; i++)  {
       var object                             = {};
@@ -161,7 +164,7 @@ export const eventfulDataModule = (function() {
           object.properties['marker-symbol'] = "music";
     geojson.push(object);
   }                                                             log(geojson);
-    Map.toMap(geojson);
+    Map.toMap(geojson, userData);
 
     return geojson;
   };
@@ -176,7 +179,7 @@ export const eventfulDataModule = (function() {
 
 
   //Use Formula Function to determine each event distance from the user, and add it to the eventsArray.
-  var addDistanceFromUserToEventsArray = function(eventsArray) {
+  var addDistanceFromUserToEventsArray = function(eventsArray, userData) {
     if (typeof newDestination === 'undefined') {  //#TODO:20 need a solution for this global.
       log(map);
       for (var i = 0; i < eventsArray.length; i++) {
@@ -189,12 +192,12 @@ export const eventfulDataModule = (function() {
                      eventsArray[j].push(distance);
       }
     }
-      parseMarkersByDistance(eventsArray, 1000);
+      parseMarkersByDistance(eventsArray, 1000, userData);
   };
 
 
   //Delete events from the eventsArray that are beyond the specified radius.
-  var parseMarkersByDistance = function(eventsArray, radiusInMiles) {
+  var parseMarkersByDistance = function(eventsArray, radiusInMiles, userData) {
     eArray = [];
     for (var i = 0; i < eventsArray.length; i++) {
       if (eventsArray[i][12] < radiusInMiles) {
@@ -203,12 +206,12 @@ export const eventfulDataModule = (function() {
     }
     log(eArray);
     // addMarkers(eArray, map);
-    createGeoJson(eArray);
+    createGeoJson(eArray, userData);
   };
 
 
   //This Function uses the Haversine Formula to determine distance between two sets of LatLng coordinates.
-  var getDistanceFromLatLon = function(lat1,lon1,lat2,lon2) {
+  var getDistanceFromLatLon = function(lat1, lon1, lat2, lon2, userData) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2-lat1);  // deg2rad below
     var dLon = deg2rad(lon2-lon1);

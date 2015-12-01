@@ -16,7 +16,7 @@ var homeSliceModule = (function () {
 
   var homeHashBool = true;
 
-  var findShows = function findShows() {
+  var findShows = function findShows(userData) {
     var findShowsButton = (0, _alias.dom)('#circle');
     var body = (0, _alias.dom)('body');
     var planTourButton = (0, _alias.dom)('#circle2');
@@ -33,7 +33,7 @@ var homeSliceModule = (function () {
     (0, _alias.off)('click', findShowsButton, findShows);
     (0, _alias.on)('click', findShowsButton, restoreHomeButtons);
     (0, _alias.on)('click', '#arrow', function () {
-      _conStruction.conStructionModule.loadMap(0);
+      _conStruction.conStructionModule.loadMap(0, userData);
     });
   };
 
@@ -75,7 +75,7 @@ var homeSliceModule = (function () {
     }
   };
 
-  var initHome = function initHome() {
+  var initHome = function initHome(userData) {
     (0, _alias.log)('initiate');
     if (homeHashBool === true) {
       (0, _alias.log)(homeHashBool);
@@ -88,7 +88,9 @@ var homeSliceModule = (function () {
     (0, _alias.log)(findShowsButton);
 
     if (typeof findShowsButton !== 'undefined') {
-      (0, _alias.on)('click', '#circle', findShows);
+      (0, _alias.on)('click', '#circle', function () {
+        findShows(userData);
+      });
     }
   };
 

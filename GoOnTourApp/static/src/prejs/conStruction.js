@@ -8,6 +8,7 @@ import { eventfulDataModule as Events } from './eventfulData';
 
 
 var without = require('lodash/array/without'),
+   xorCrypt = require('xor-crypt'),
           _ = require('jquery');
               require('jquery-ui');
 
@@ -24,7 +25,7 @@ export const conStructionModule = (function() {
   var forHash;
   var userCoords;
 
-  var buildButtons = function() {
+  var buildButtons = function(userData) {
     var direct = dom('#directions');
     var engineButton = make('button');
         engineButton.id = 'engineButton';
@@ -38,9 +39,13 @@ export const conStructionModule = (function() {
                   put(zoomBackButton, direct);
                     put(engineButton, direct);
                   put(engineButton2, direct);
-        on('click', engineButton, Map.routeEngine);
+        on('click', engineButton, function(userData) {
+          Map.routeEngine(userData);
+        });
         on('click', engineButton2, Map.reRouteEngine);
-        on('click', zoomBackButton, Map.zoomBackOut);
+        on('click', zoomBackButton, function() {
+          Map.zoomBackOut(userData);
+        });
         on('mouseover', engineButton, toolTips);
         on('mouseover', engineButton2, toolTips);
         on('mouseover', zoomBackButton, toolTips);
@@ -64,23 +69,55 @@ export const conStructionModule = (function() {
   };
 
 
-  var displayFlickrPhotos = function(artistPhotos, venuePhotos) {
-    log(artistPhotos);
-    artistPics = artistPhotos.photos.photo;     log(artistPics);
 
-    var i = Math.floor(Math.random() * 19);
-    var footer = dom('#block');
-        footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
 
-    refreshIntervalId = setInterval(function() {  //NOTE This may not work.
-      // var artistPics = artistPhotos.photos.photo
-      var j = Math.floor(Math.random() * 19);
-      var footer = dom('#block');
-                  kill('#id');
-          footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
-    }, 5000);
-    upFooter();
+  var displayPopupFooter = function(feature, artistPhotos, venuePhotos) {
+
+    var props = feature.properties;                 log('props'); log(props);
+    var artistPics = artistPhotos.photos.photo;     log(artistPics);
+
+    var _displayArtistShowInfo = function(props) {
+      _('<span><h2>' + props.title + '</h2><br /><p>Performing at: <b>' + props.venueName + '</b><br />in <b>' + props.cityName + '</b></span>')
+            .appendTo('#block')
+            .css({fontFamily: 'Architects Daughter', color: 'white', zIndex: '1001 ', position: 'absolute'})
+            .attr('id', 'show-info');
+
+    };
+
+    var _upFooter = function(props) {
+      log('hello');
+      var footer = css('#block');
+      if (footer.height === '80px') {
+        footer.height = '350px';
+        footer.opacity = '.9';
+      }
+    };
+
+    var _flickrPics = function(artistPics) {
+      log(artistPics.length);
+      if (artistPics.length > 0) {
+        _upFooter(props);
+        var i = Math.floor(Math.random() * 19);
+        var footer = dom('#block');
+            footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
+
+        refreshIntervalId = setInterval(function() {  //NOTE This may not work.
+          var artistPics = artistPhotos.photos.photo;
+          var j = Math.floor(Math.random() * 19);
+          var footer = dom('#block');
+                      kill('#id');
+              footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
+        }, 5000);
+      }
+    };
+
+    if (artistPics.length > 0) {
+      _upFooter()
+      _flickrPics(artistPics);
+      _displayArtistShowInfo(props)
+    }
   };
+
 
   var closeFooterAndKillPics = function() {
     var footer = css('#block');
@@ -90,65 +127,67 @@ export const conStructionModule = (function() {
     }
   };
 
-  var upFooter = function() {
-    log('hello');
-    var footer = css('#block');
-    if (footer.height === '80px') {
-      footer.height = '350px';
-      footer.opacity = '.9';
+
+
+  function toolTips(e) {
+    log('step1'); log(id);
+    var source = e.target.id;    log('tt'); log(source);
+        toolTipsPane = make('div');
+    if (source === 'engineButton') {
+      if (typeof id !== 'undefined') {
+        log('undy'); log(id);
+        var delPane = dom(id);
+        log(delPane);
+        if (delPane !== null) {
+          log('kill1');
+          kill(id);
+        }
+      }
+    toolTipsPane.innerHTML = 'Set Current Leg and Proceed to Next Day of Trip';
+    toolTipsPane.id = 'ttPaneEngine';
+    id = '#ttPaneEngine';
+
+    } else if (source === 'engineButton2') {
+      if (typeof id !== 'undefined') {
+        var delPane = dom(id);
+        log('id'); log(id);
+        if (delPane !== null) {
+          log('kill2');
+          kill(id);
+        }
+      }
+    toolTipsPane.innerHTML = 'Erase Current Leg and Edit Previous Leg';
+    toolTipsPane.id = 'ttPaneEngine2';
+    id = '#ttPaneEngine2';
+
+    } else {
+      if (typeof id !== 'undefined') {
+        var delPane = dom(id);
+        if (delPane !== null) {
+          log('kill3');
+            kill(id);
+        }
+      }
+    log('hello yall!');
+    toolTipsPane.innerHTML = 'Zoom Back Out';
+    toolTipsPane.id = 'ttPaneZoom';
+    id = '#ttPaneZoom';
+    }
+    put(toolTipsPane, dom('#map'));
+    log('ttpane');
+    log(toolTipsPane);
+
+    if (toolTipsPane !== null) {
+      setTimeout(function() {
+        log('kill4');
+         log(toolTipsPane);
+        dom('#map').removeChild(toolTipsPane);
+      }, 3000); //NOTE May have problems with this function.
     }
   };
 
 
-  // function toolTips(e) {
-  //   var source = e.target.id;     log(source);
-  //       toolTipsPane = make('div');
-  //   if (source === 'engineButton') {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //         kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Set Current Leg and Proceed to Next Day of Trip';
-  //   toolTipsPane.id = 'ttPaneEngine';
-  //   id = '#ttPaneEngine';
-  //
-  //   } else if (source === 'engineButton2') {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //         kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Erase Current Leg and Edit Previous Leg';
-  //   toolTipsPane.id = 'ttPaneEngine2';
-  //   id = 'ttPaneEngine2';
-  //
-  //   } else {
-  //     if (typeof id !== 'undefined') {
-  //       delPane = dom(id);
-  //       if (delPane !== null) {
-  //           kill(id);
-  //       }
-  //     }
-  //   toolTipsPane.innerHTML = 'Zoom Back Out';
-  //   toolTipsPane.id = 'ttPaneZoom';
-  //   id = 'ttPaneZoom';
-  //   }
-  //   put(toolTipsPane);
-  //   log(toolTipsPane);
-  //
-  //   if (toolTipsPane !== null) {
-  //     setTimeout(function() {
-  //        log(toolTipsPane);
-  //       kill(toolTipsPane);
-  //     }, 3000); //NOTE May have problems with this function.
-  //   }
-  // };
-
-
-  var loadMap = function(coordinates) {
+  var loadMap = function(coordinates, userData) {
     forHash = coordinates;        log(coordinates);
 
     var xhr = new XMLHttpRequest();
@@ -181,10 +220,10 @@ export const conStructionModule = (function() {
 
       if (coordinates !== 0) {  //NOTE Removed this assignment => userCoords = coordinates;
         log('!0');
-        Map.initMap(coordinates);
+        Map.initMap(coordinates, userData);
       } else {
         log('0');
-        Map.getUser();
+        Map.initMap(null, userData);
 
       }
     };
@@ -228,19 +267,21 @@ export const conStructionModule = (function() {
   };
 
 
-  var showSearchOperations = function() {   // Using a closure here to group search operation functions together,
-                                            //  and also utilizing the resulting namespace for userData, so as
-                                            // to avoid using a global variable.
-    var userData = {};
-        userData.searchParameters = {startDate: null, endDate: null};    log(userData);
+  var showSearchOperations = function(data) {   // Using a closure here to group search operation functions together,
+                                                //  and also utilizing the resulting namespace for userData, so as
+    var decryptedData = xorCrypt(data);         // to avoid using a global variable.
+
+    var userData = JSON.parse(decryptedData); log('userData');log(userData);
+        userData.searchParameters = {'startDate': null, 'endDate': null};
         userData.searchParameters.genres = [];
     var genre,
         displayGenres = [],
                genres = userData.searchParameters.genres;
 
 
-
     var _collectKeywords = function() {
+      _('#gel')
+              .remove();
       Events.getData(userData);
     };
 
@@ -363,15 +404,15 @@ export const conStructionModule = (function() {
 
 
 
-  return {
-    forHash: forHash,
-    buildButtons: buildButtons,
-    buildMenus: buildMenus,
-    displayFlickrPhotos: displayFlickrPhotos,
-    closeFooterAndKillPics: closeFooterAndKillPics,
-    loadMap: loadMap,
-    homeReload: homeReload,
+                return {
+                 forHash: forHash,
+            buildButtons: buildButtons,
+              buildMenus: buildMenus,
+     displayPopupFooter: displayPopupFooter,
+  closeFooterAndKillPics: closeFooterAndKillPics,
+                 loadMap: loadMap,
+              homeReload: homeReload,
     showSearchOperations: showSearchOperations
-  };
+                       };
 
 }) ();

@@ -8,10 +8,15 @@ var React = require('react/addons');
 
 
 (function() {
+
+  var userData = {};
+
   log('a-step-a 1');
 
 
-  on('DOMContentLoaded', document, Home.initHome);
+  on('DOMContentLoaded', document, function() {
+    Home.initHome(userData);
+  });
   on('scroll', '.parallax', Home.sunSetScroll);
 
   var reactDRP = React.createElement(DatePicker);

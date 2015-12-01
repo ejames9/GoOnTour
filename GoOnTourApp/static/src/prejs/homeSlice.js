@@ -9,7 +9,7 @@ export var homeSliceModule =  (function() {
   var homeHashBool = true;
 
 
-  var findShows = function() {
+  var findShows = function(userData) {
     var findShowsButton = dom('#circle');
                var body = dom('body');
      var planTourButton = dom('#circle2');
@@ -27,7 +27,7 @@ var startLocationInput1 = dom('.input1');
     off('click', findShowsButton, findShows);
     on('click', findShowsButton, restoreHomeButtons);
     on('click', '#arrow', function() {
-      Construct.loadMap(0);
+      Construct.loadMap(0, userData);
     });
 
   };
@@ -71,7 +71,7 @@ var startLocationInput1 = dom('.input1');
         }
   };
 
-  var initHome = function() {
+  var initHome = function(userData) {
       log('initiate');
     if (homeHashBool === true) {
       log(homeHashBool);
@@ -84,7 +84,9 @@ var startLocationInput1 = dom('.input1');
     log(findShowsButton);
 
     if (typeof findShowsButton !== 'undefined') {
-      on('click', '#circle', findShows);
+      on('click', '#circle', function() {
+        findShows(userData);
+      });
     }
   };
 
