@@ -12,6 +12,136 @@ html, body, main {
   padding: 0;
 }
 
+.custom-popup .leaflet-popup-content-wrapper {
+  background:#2c3e50;
+  color:#fff;
+  opacity: .8;
+  font-family: Cabin Sketch;
+  font-size:20px;
+  line-height:24px;
+  }
+.custom-popup .leaflet-popup-content-wrapper a {
+  color:rgba(255,255,255,0.5);
+  }
+.custom-popup .leaflet-popup-tip-container {
+  width: 30px;
+  height:15px;
+  }
+.custom-popup .leaflet-popup-tip {
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-top:15px solid #2c3e50;
+  }
+.custom-popup .leaflet-popup-content h2 {
+  font-size: 16px;
+  pointer-events: all;
+}
+.leaflet-popup-close-button {
+  z-index: 10;
+}
+
+#react-app {
+ position: absolute;
+ display: block;
+ height: 100%;
+ width: 100%;
+ z-index: 11;
+}
+
+ .popup-footer {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  z-index: 12;
+}
+
+.popup-footer {
+  color: white;
+  font-family: Cabin Sketch;
+  text-shadow: 1px 0px 0px black, 1px 1px 0px black, 0px 1px 0px black,
+    -1px 1px 0px black, -1px 0px 0px black, -1px -1px 0px black,
+    0px -1px 0px black, 1px -1px 0px black, 1px 4px 5px black;
+}
+
+.popup-title p {
+  position: relative;
+  top: 25px;
+  left: 2%;
+  font-size: 46px;
+}
+
+.popup-date .date {
+  color: black;
+  position: absolute;
+  font-size: 22px;
+  left: 40%;
+  bottom: 4%;
+  text-shadow: 1px 0px 0px white, 1px 1px 0px white, 0px 1px 0px white,
+    -1px 1px 0px white, -1px 0px 0px white, -1px -1px 0px white,
+    0px -1px 0px white, 1px -1px 0px white, 1px 4px 5px white;
+}
+
+.popup-venue-info .venue-city {
+  position: absolute;
+  bottom: 2%;
+  font-size: 24px;
+  left: 3%;
+}
+
+.popup-venue-info .venue-name {
+  position: absolute;
+  bottom: 10%;
+  font-size: 27px;
+  left: 1%;
+}
+
+
+.popup-venue-info .venue-url, .venue-address {
+  display: none;
+}
+
+.popup-description-url .url {
+  position: absolute;
+  display: none;
+  font-size: 14px;
+  height: 20px;
+  width: 600px;
+  overflow-y: hidden;
+  left: 51%;
+  bottom: -25%;
+
+}
+
+.description {
+  position: absolute;
+  top: 23%;
+  height: 200px;
+  left: 55%;
+  width: 32%;
+  overflow: scroll;
+}
+
+.route {
+  position: absolute;
+  font-size: 28px;
+  font-family: Cabin Sketch;
+  height: 45px;
+  width: 120px;
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  left: 43%;
+  bottom: 35%;
+}
+.route:hover {
+  background-color: blue;
+}
+.route:active {
+  background-color: red;
+}
+
 
 #map {
   height: 100%;
@@ -28,88 +158,6 @@ html, body, main {
   z-index: 10;
   transition-duration: 1.5s;
 
-}
-/*
-#block:hover {
-  height: 350px;
-  transition-duration: 1.5s;
-}
-
-#start {
-  margin-left: 50px;
-  margin-top: 35px;
-}
-
-#end {
-  margin-left: 50px;
-}*/
-
-
-#start_date {
-  top: 110px;
-}
-
-#end_date {
-  top: 150px;
-}
-
-#favArtist {
-  top: 190px;
-}
-
-
-#start, #end, #start_date, #end_date,
-#favArtist {
-  position: absolute;
-  border-radius: 7px;
-  border: none;
-  color: green;
-  background-color: #d3bea4;
-  height: 20px;
-  width: 130px;
-  border: 1px solid green;
-  left: 10px;
-  z-index: 100;
-
-}
-
-#keywords  {
-  top: 230px;
-  position: relative;
-  border-radius: 7px;
-  border: none;
-  color: green;
-  background-color: #d3bea4;
-  border: 1px solid green;
-  height: 20px;
-  width: 160px;
-  left: 10px;
-  z-index: 100;
-
-
-}
-
-#submit {
-  height: 22px;
-  width: 65px;
-  border-radius: 7px;
-  border: 1px solid #d3bea4;
-  background-color: transparent;
-  color: #d3bea4;
-  position: absolute;
-  left: 10px;
-  top: 270px;
-  z-index: 100;
-}
-
-#submit:hover {
-  background-color: white;
-  color: green;
-}
-
-#submit:active {
-  background-color: blue;
-  color: white;
 }
 
 #menu {
@@ -244,8 +292,8 @@ html, body, main {
     right: 0;
     bottom: 0;
     overflow: auto;
-    background-color: #091423;
-    opacity: .8;
+    background-color: #2c3e50;
+    opacity: .9;
     position: fixed;
     width: 20px;
     transition-duration: 1s;
@@ -278,9 +326,6 @@ html, body, main {
     left: 10px;
 }
 
-.mapbox-improve-map {
-
-}
 
 .leaflet-control-attribution.leaflet-control {
   display: none;
@@ -384,13 +429,14 @@ html, body, main {
   position: absolute;
   height: 60px;
   width: 250px;
-  background-color: #091423;
-  opacity: .8;
+  background-color: #2c3e50;      /*  #091423; */
+  opacity: .7;
   border-radius: 7px;
-  color: #d3bea4;
+  color: #fff;
   left: 740px;
   top: 60px;
   font-size: 20px;
+  font-family: Cabin Sketch;
   text-align: center;
   padding-top: 20px;
   padding-bottom: 30px;
@@ -401,13 +447,14 @@ html, body, main {
   position: absolute;
   height: 90px;
   width: 250px;
-  background-color: #091423;
-  opacity: .8;
+  background-color: #2c3e50;
+  opacity: .7;
   border-radius: 7px;
-  color: #d3bea4;
+  color: #fff;
   left: 740px;
   top: 60px;
   font-size: 20px;
+  font-family: Cabin Sketch;
   text-align: center;
   padding-top: 10px;
   padding-bottom: 40px;
@@ -419,12 +466,13 @@ html, body, main {
   position: absolute;
   height: 90px;
   width: 250px;
-  background-color: #091423;
-  opacity: .8;
+  background-color: #2c3e50;
+  opacity: .7;
   border-radius: 7px;
-  color: #d3bea4;
+  color: #fff;
   left: 740px;
   top: 60px;
+  font-family: Cabin Sketch;
   font-size: 20px;
   text-align: center;
   padding-top: 20px;
@@ -454,4 +502,8 @@ html, body, main {
 }
 #maplogo:active {
   opacity: .5;
+}
+
+.mapbox-logo {
+  display: none;
 }

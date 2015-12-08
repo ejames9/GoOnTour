@@ -1,8 +1,10 @@
 // homeSlice, JavaScript Module for GoOnTour.org. Deals mainly with
 // Home Page Navigation
-import { put, dom, css, on, off, log, make, kill } from './alias';
+import { put, dom, css, on, off, log, make, kill, query } from './alias';
 import { conStructionModule as Construct }  from './conStruction';
 import { goOnTourMapsModule as Map } from './goOnTourMaps';
+
+
 
 export var homeSliceModule =  (function() {
 
@@ -16,7 +18,8 @@ export var homeSliceModule =  (function() {
 var startLocationInput1 = dom('.input1');
               var lines = make('div');
 
-                         lines.id      = 'lines';
+                  lines.setAttribute('class', 'lines');
+
                css('#circle2').display = 'none';
                 css('#input1').display = 'block';
                  css('#arrow').display = 'block';
@@ -24,7 +27,7 @@ var startLocationInput1 = dom('.input1');
                   put(lines, body);
 
 
-    off('click', findShowsButton, findShows);
+    // off('click', '#circle', findShows);
     on('click', findShowsButton, restoreHomeButtons);
     on('click', '#arrow', function() {
       Construct.loadMap(0, userData);
@@ -34,17 +37,21 @@ var startLocationInput1 = dom('.input1');
 
   var restoreHomeButtons = function() {
     var findShowsButton = dom('#circle');
-              var lines = dom('#lines');
+              var lines = dom('.lines');
 
          css('#circle2').display = 'block';
          css('#input1').display = 'none';
          css('#arrow').display = 'none';
 
-     if (lines) {
-          kill(lines);
-                }
 
-     on('click', findShowsButton, findShows);
+     if (lines) {
+        lines = query('.lines');
+        while (lines.length > 0) {
+          lines[0].parentNode.removeChild(lines[0]);
+        }
+      }
+     off('click', findShowsButton, restoreHomeButtons);
+    //  on('click', findShowsButton, findShows);
   };
 
   var sunSetScroll = function() {

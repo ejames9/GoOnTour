@@ -4,11 +4,16 @@ import { make, put, kill, css, on, off, log, dom, query} from './alias';
 import { goOnTourMapsModule as Map } from './goOnTourMaps';
 import { homeSliceModule as Home } from './homeSlice';
 import { eventfulDataModule as Events } from './eventfulData';
+import { PopupFooter } from './reactFlickrPopupFooter';
 
 
 
 var without = require('lodash/array/without'),
+      React = require('react/addons'),
+   ReactDOM = require('react-dom'),
    xorCrypt = require('xor-crypt'),
+ htmlToText = require('html-to-text'),
+     moment = require('moment'),
           _ = require('jquery');
               require('jquery-ui');
 
@@ -70,21 +75,31 @@ export const conStructionModule = (function() {
 
 
 
+  var displayPopupFooter = function(feature, artistPhotos, venuePhotos, datum) {
 
-  var displayPopupFooter = function(feature, artistPhotos, venuePhotos) {
+    var dataArray = [];
+    var data = feature.properties;                 log('props'); log(feature);
+    var coords = feature.geometry.coordinates;
 
-    var props = feature.properties;                 log('props'); log(props);
-    var artistPics = artistPhotos.photos.photo;     log(artistPics);
+    var formatDate = moment(data.startTime).format('dddd, MMMM Do YYYY, [Doors open at] h:mm[pm]');   log('formatDate'); log(formatDate);
+    var noMarkup   = htmlToText.fromString(data.description, null);                               log('noMarkup');   log(noMarkup);
+        data.description = noMarkup;
+        data.startTime   = formatDate;
 
-    var _displayArtistShowInfo = function(props) {
-      _('<span><h2>' + props.title + '</h2><br /><p>Performing at: <b>' + props.venueName + '</b><br />in <b>' + props.cityName + '</b></span>')
-            .appendTo('#block')
-            .css({fontFamily: 'Architects Daughter', color: 'white', zIndex: '1001 ', position: 'absolute'})
-            .attr('id', 'show-info');
+    var artistPics = artistPhotos.photos.photo;
+        dataArray.push(data);                           log(artistPics);
 
+        _('<div id="react-app">')
+                    .appendTo('#block');
+
+    var _displayArtistShowInfo = function(dataArray) {
+      var popupFooter = React.render(
+        <PopupFooter data={dataArray} datum={datum} coords={coords}/>,
+        dom('#react-app')
+      );
     };
 
-    var _upFooter = function(props) {
+    var _upFooter = function(data) {
       log('hello');
       var footer = css('#block');
       if (footer.height === '80px') {
@@ -96,7 +111,7 @@ export const conStructionModule = (function() {
     var _flickrPics = function(artistPics) {
       log(artistPics.length);
       if (artistPics.length > 0) {
-        _upFooter(props);
+        _upFooter(data);
         var i = Math.floor(Math.random() * 19);
         var footer = dom('#block');
             footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
@@ -107,14 +122,14 @@ export const conStructionModule = (function() {
           var footer = dom('#block');
                       kill('#id');
               footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
-        }, 5000);
+        }, 200000);
       }
     };
 
     if (artistPics.length > 0) {
       _upFooter()
       _flickrPics(artistPics);
-      _displayArtistShowInfo(props)
+      _displayArtistShowInfo(data)
     }
   };
 
@@ -219,7 +234,7 @@ export const conStructionModule = (function() {
                   .css('opacity', '.7');
 
       if (coordinates !== 0) {  //NOTE Removed this assignment => userCoords = coordinates;
-        log('!0');
+        log('!0'); log(userData);
         Map.initMap(coordinates, userData);
       } else {
         log('0');
@@ -282,6 +297,7 @@ export const conStructionModule = (function() {
     var _collectKeywords = function() {
       _('#gel')
               .remove();
+      log(userData); log('ylkjlkj');
       Events.getData(userData);
     };
 

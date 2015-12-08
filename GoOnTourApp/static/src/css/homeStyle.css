@@ -32,7 +32,7 @@ pre {
 .results li {
   height: 30px;
   width: 400px;
-  overflow: scroll;
+  overflow-x: hidden;
   top: 0px;
 
 }
@@ -115,7 +115,7 @@ pre {
   color: red;
 }
 
-#lines {
+.lines {
   position: fixed;
   height: 62px;
   width: 40px;
@@ -267,7 +267,7 @@ pre {
   right: 3%;
   top: 1%;
   color: #ffe550;
-  font-size: 54px;
+  font-size: 50px;
   font-family: Architects Daughter;
 }
 

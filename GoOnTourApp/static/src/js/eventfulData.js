@@ -97,6 +97,8 @@ var eventfulDataModule = (function () {
         e.push(objects[i].venue_url);
         e.push(objects[i].latitude);
         e.push(objects[i].longitude);
+        e.push(objects[i].region_name);
+        e.push(objects[i].region_abbr);
         e.push(objects[i].image);
         eventsArray.push(e);
       }
@@ -135,6 +137,8 @@ var eventfulDataModule = (function () {
       e.push(objects[i].venue_url);
       e.push(objects[i].latitude);
       e.push(objects[i].longitude);
+      e.push(objects[i].region_name);
+      e.push(objects[i].region_abbr);
       e.push(objects[i].image);
       eventsArray.push(e);
     }
@@ -160,14 +164,16 @@ var eventfulDataModule = (function () {
       object.properties = {};
       object.properties['title'] = eArray[i][0];
       object.properties['description'] = eArray[i][5];
-      object.properties['cityName'] = eArray[i][1];
+      object.properties['venueCity'] = eArray[i][1];
       object.properties['startTime'] = eArray[i][3];
       object.properties['venueName'] = eArray[i][2];
       object.properties['performers'] = eArray[i][4];
       object.properties['url'] = eArray[i][6];
       object.properties['venueAddress'] = eArray[i][7];
       object.properties['venueUrl'] = eArray[i][8];
-      object.properties['venueImages'] = eArray[i][11];
+      object.properties['artistImages'] = eArray[i][13];
+      object.properties['venueState'] = eArray[i][11];
+      object.properties['stateAbbr'] = eArray[i][12];
       object.properties['marker-color'] = "#444";
       object.properties['marker-size'] = "medium";
       object.properties['marker-symbol'] = "music";
@@ -208,7 +214,7 @@ var eventfulDataModule = (function () {
   var parseMarkersByDistance = function parseMarkersByDistance(eventsArray, radiusInMiles, userData) {
     eArray = [];
     for (var i = 0; i < eventsArray.length; i++) {
-      if (eventsArray[i][12] < radiusInMiles) {
+      if (eventsArray[i][14] < radiusInMiles) {
         eArray.push(eventsArray[i]);
       }
     }

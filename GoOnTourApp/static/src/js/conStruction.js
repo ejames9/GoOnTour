@@ -14,8 +14,14 @@ var _homeSlice = require('./homeSlice');
 
 var _eventfulData = require('./eventfulData');
 
+var _reactFlickrPopupFooter = require('./reactFlickrPopupFooter');
+
 var without = require('lodash/array/without'),
+    React = require('react/addons'),
+    ReactDOM = require('react-dom'),
     xorCrypt = require('xor-crypt'),
+    htmlToText = require('html-to-text'),
+    moment = require('moment'),
     _ = require('jquery');
 require('jquery-ui');
 
@@ -75,16 +81,27 @@ var conStructionModule = (function () {
     }
   };
 
-  var displayPopupFooter = function displayPopupFooter(feature, artistPhotos, venuePhotos) {
+  var displayPopupFooter = function displayPopupFooter(feature, artistPhotos, venuePhotos, datum) {
 
-    var props = feature.properties;(0, _alias.log)('props');(0, _alias.log)(props);
-    var artistPics = artistPhotos.photos.photo;(0, _alias.log)(artistPics);
+    var dataArray = [];
+    var data = feature.properties;(0, _alias.log)('props');(0, _alias.log)(feature);
+    var coords = feature.geometry.coordinates;
 
-    var _displayArtistShowInfo = function _displayArtistShowInfo(props) {
-      _('<span><h2>' + props.title + '</h2><br /><p>Performing at: <b>' + props.venueName + '</b><br />in <b>' + props.cityName + '</b></span>').appendTo('#block').css({ fontFamily: 'Architects Daughter', color: 'white', zIndex: '1001 ', position: 'absolute' }).attr('id', 'show-info');
+    var formatDate = moment(data.startTime).format('dddd, MMMM Do YYYY, [Doors open at] h:mm[pm]');(0, _alias.log)('formatDate');(0, _alias.log)(formatDate);
+    var noMarkup = htmlToText.fromString(data.description, null);(0, _alias.log)('noMarkup');(0, _alias.log)(noMarkup);
+    data.description = noMarkup;
+    data.startTime = formatDate;
+
+    var artistPics = artistPhotos.photos.photo;
+    dataArray.push(data);(0, _alias.log)(artistPics);
+
+    _('<div id="react-app">').appendTo('#block');
+
+    var _displayArtistShowInfo = function _displayArtistShowInfo(dataArray) {
+      var popupFooter = React.render(React.createElement(_reactFlickrPopupFooter.PopupFooter, { data: dataArray, datum: datum, coords: coords }), (0, _alias.dom)('#react-app'));
     };
 
-    var _upFooter = function _upFooter(props) {
+    var _upFooter = function _upFooter(data) {
       (0, _alias.log)('hello');
       var footer = (0, _alias.css)('#block');
       if (footer.height === '80px') {
@@ -96,7 +113,7 @@ var conStructionModule = (function () {
     var _flickrPics = function _flickrPics(artistPics) {
       (0, _alias.log)(artistPics.length);
       if (artistPics.length > 0) {
-        _upFooter(props);
+        _upFooter(data);
         var i = Math.floor(Math.random() * 19);
         var footer = (0, _alias.dom)('#block');
         footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
@@ -108,14 +125,14 @@ var conStructionModule = (function () {
           var footer = (0, _alias.dom)('#block');
           (0, _alias.kill)('#id');
           footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(j)].farm + '.staticflickr.com/' + artistPics[String(j)].server + '/' + artistPics[String(j)].id + '_' + artistPics[String(j)].secret + '_z.jpg"/>';
-        }, 5000);
+        }, 200000);
       }
     };
 
     if (artistPics.length > 0) {
       _upFooter();
       _flickrPics(artistPics);
-      _displayArtistShowInfo(props);
+      _displayArtistShowInfo(data);
     }
   };
 
@@ -210,7 +227,7 @@ var conStructionModule = (function () {
 
       if (coordinates !== 0) {
         //NOTE Removed this assignment => userCoords = coordinates;
-        (0, _alias.log)('!0');
+        (0, _alias.log)('!0');(0, _alias.log)(userData);
         _goOnTourMaps.goOnTourMapsModule.initMap(coordinates, userData);
       } else {
         (0, _alias.log)('0');
@@ -267,6 +284,7 @@ var conStructionModule = (function () {
 
     var _collectKeywords = function _collectKeywords() {
       _('#gel').remove();
+      (0, _alias.log)(userData);(0, _alias.log)('ylkjlkj');
       _eventfulData.eventfulDataModule.getData(userData);
     };
 

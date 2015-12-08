@@ -23,14 +23,15 @@ var homeSliceModule = (function () {
     var startLocationInput1 = (0, _alias.dom)('.input1');
     var lines = (0, _alias.make)('div');
 
-    lines.id = 'lines';
+    lines.setAttribute('class', 'lines');
+
     (0, _alias.css)('#circle2').display = 'none';
     (0, _alias.css)('#input1').display = 'block';
     (0, _alias.css)('#arrow').display = 'block';
 
     (0, _alias.put)(lines, body);
 
-    (0, _alias.off)('click', findShowsButton, findShows);
+    // off('click', '#circle', findShows);
     (0, _alias.on)('click', findShowsButton, restoreHomeButtons);
     (0, _alias.on)('click', '#arrow', function () {
       _conStruction.conStructionModule.loadMap(0, userData);
@@ -39,17 +40,20 @@ var homeSliceModule = (function () {
 
   var restoreHomeButtons = function restoreHomeButtons() {
     var findShowsButton = (0, _alias.dom)('#circle');
-    var lines = (0, _alias.dom)('#lines');
+    var lines = (0, _alias.dom)('.lines');
 
     (0, _alias.css)('#circle2').display = 'block';
     (0, _alias.css)('#input1').display = 'none';
     (0, _alias.css)('#arrow').display = 'none';
 
     if (lines) {
-      (0, _alias.kill)(lines);
+      lines = (0, _alias.query)('.lines');
+      while (lines.length > 0) {
+        lines[0].parentNode.removeChild(lines[0]);
+      }
     }
-
-    (0, _alias.on)('click', findShowsButton, findShows);
+    (0, _alias.off)('click', findShowsButton, restoreHomeButtons);
+    //  on('click', findShowsButton, findShows);
   };
 
   var sunSetScroll = function sunSetScroll() {

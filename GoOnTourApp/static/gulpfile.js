@@ -149,7 +149,7 @@ gulp.task('default', function() {
   runSequence('imagemin', 'build-html', 'CSS', 'JS');
 
   // Watch for changes in DatePicker jsx
-  gulp.watch('./src/prejs/reactDateRangePicker2.jsx', function() {
+  gulp.watch('./src/prejs/*.jsx', function() {
     gulp.run('JS');
   });
 

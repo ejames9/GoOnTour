@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "dependencies": {
     "eventful-node": "^1.1.1",
+    "html-to-text": "^1.5.0",
     "jquery": "^2.1.4",
     "jquery-ui": "^1.10.5",
     "leaflet-markercluster": "^0.2.0",
     "leaflet.locatecontrol": "^0.45.1",
     "lodash": "^3.10.1",
     "react-daterange-picker": "^0.12.2",
+    "react-dom": "^0.14.3",
     "react-geocoder": "^2.5.0",
     "xor-crypt": "^1.0.0"
   }
