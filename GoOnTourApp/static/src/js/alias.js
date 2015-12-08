@@ -128,7 +128,7 @@ var off = function off(event, el, callback) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
       el = el.slice(1);
-      return document.getElementById(el).removeEventListener(event, callback);
+      return document.getElementById(id).removeEventListener(event, callback);
     } else if (el[0] === '.') {
       el = el.slice(1);
       return document.getElementsByClassName(el)[0].removeEventListener(event, callback);

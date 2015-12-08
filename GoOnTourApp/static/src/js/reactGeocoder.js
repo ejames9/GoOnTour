@@ -71,8 +71,9 @@ var reactGeocoder = React.createClass({
             (0, _alias.log)(thine.locText);
             var tTip = (0, _alias.make)('div');
             tTip.className = 'tTip';
-            tTip.innerText = thine.locText;
-            (0, _alias.log)(thine.element);
+            (0, _alias.log)(['tt', thine.locText]);
+            tTip.innerHTML = thine.locText;
+            (0, _alias.log)([tTip, thine.element]);
             thine.element.appendChild(tTip);
           }, 1000);
           setTimeout(function () {
