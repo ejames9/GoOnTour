@@ -18,6 +18,7 @@ var _homeSlice = require('./homeSlice');
 
 //CommonJS Modules
 var moment = require('moment'),
+    React = require('react/addons'),
     xorCrypt = require('xor-crypt'),
     _ = require('jquery');
 // __ = require('lodash');
@@ -40,13 +41,16 @@ var goOnTourMapsModule = (function () {
   var bool2 = true;
   var bool3 = true;
   var mapHashBool = true;
+  var pathColorArray = ['#58292a', '#fdfca5', '#5c4c59', '#7bb64b', '#f5be57', '#091423', '#cd552d', '#d9e7f1', '#2b86f3', '#0d6711', '#662e7f'];
 
   L.mapbox.accessToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
 
   var initiateMap = function initiateMap(coordinates, data) {
-    (0, _alias.log)(coordinates);(0, _alias.log)(data);
+    (0, _alias.log)('initMap');(0, _alias.log)(coordinates);(0, _alias.log)(data);
+    (0, _alias.kill)('.lines');
     if (coordinates === null) {
       map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
+      map.scrollWheelZoom.disable();
       var userLocater = L.control.locate({
         markerClass: L.circleMarker,
         locateOptions: {
@@ -54,26 +58,17 @@ var goOnTourMapsModule = (function () {
         }
       }).addTo(map);
       userLocater.start();
-      coords = coordinates;
-
       setTimeout(function () {
-        var center = map.getCenter();
-        (0, _alias.log)('center' + center);
-        var coordinates = [center.lat, center.lng];
-        (0, _alias.log)(coordinates);
-        var userData = data;
-        userData.mapData = {};
-        userData.mapData.userCoordinates = coordinates;
-
-        map.setView(coordinates);
-        initializeDirectionsAPI(userData);
+        onLocationFound(data);
       }, 3000);
     } else {
       var uCoords = [coordinates[1], coordinates[0]];
-      var userData = data;
+      var userData = {};
       userData.mapData = {};
       userData.mapData.userCoordinates = uCoords;
+      (0, _alias.log)(['udata', userData]);
       map = L.mapbox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
+      map.scrollWheelZoom.disable();
       initializeDirectionsAPI(userData);
     }
     // var center = map.getCenter();
@@ -103,6 +98,24 @@ var goOnTourMapsModule = (function () {
     //  };
   };
 
+  var onLocationFound = function onLocationFound(data) {
+    (0, _alias.log)('onFound');(0, _alias.log)(data);(0, _alias.log)(dataBridgeID);(0, _alias.log)(window === this);(0, _alias.log)(goOnTourMapsModule === this);
+    var url = '/api_search_parameters/',
+        fd = new FormData();
+    fd.append('function', 1);
+    fd.append('id', dataBridgeID);
+
+    (0, _alias.xhr)(fd, url, function () {
+      alert(this.responseText);
+    }, 'post');
+    (0, _alias.log)(coords);(0, _alias.log)('coords');
+    var userData = data;
+    userData.mapData = {};
+    userData.mapData.userCoordinates = coordinates;
+
+    initializeDirectionsAPI(userData);
+  };
+
   var initializeDirectionsAPI = function initializeDirectionsAPI(userData) {
     var userCoords = userData.mapData.userCoordinates;
     var stringData = JSON.stringify(userData);
@@ -124,14 +137,23 @@ var goOnTourMapsModule = (function () {
     .query();
   };
 
+  var addDestinationToRoute = function addDestinationToRoute(datum, coords) {
+    _('#react-app').remove();
+    _conStruction.conStructionModule.closeFooterAndKillPics();
+    newDestination = L.latLng(coords[1], coords[0]);
+    directionsArray[0].setDestination(newDestination).query();
+    routeEngine(datum);
+  };
+
   var zoomBackOut = function zoomBackOut(userData) {
     map.setView(userData.mapData.currentCenter, userData.mapData.currentZoom);
   };
 
   var reRouteEngine = function reRouteEngine() {};
 
-  var routeEngine = function routeEngine() {
-    var dateArray = [_eventfulData.eventfulDataModule.startDate, _eventfulData.eventfulDataModule.endDate];(0, _alias.log)(dateArray);
+  var routeEngine = function routeEngine(datum) {
+    var u = datum.searchParameters;
+    var dateArray = [u.startDate, u.endDate];(0, _alias.log)(dateArray);
     var startDate = dateArray[0];
     startDate = moment(startDate, 'MM-DD-YYYY');
     startDate = moment(startDate).add(1, 'days').format('MM-DD-YYYY');
@@ -141,15 +163,15 @@ var goOnTourMapsModule = (function () {
       var newDirections = new L.mapbox.directions();
       directionsArray.unshift(newDirections);
       var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directionsArray[0]).addTo(map);
-      var newdirectionsLayer = L.mapmox.directions.layer(directionsArray[0], { routeStyle: { color: pathColorArray[Math.floor(Math.random() * 11)], weight: 4, opacity: 0.75 } }).addTo(map);
+      var newdirectionsLayer = L.mapbox.directions.layer(directionsArray[0], { routeStyle: { color: pathColorArray[Math.floor(Math.random() * 11)], weight: 4, opacity: 0.75 } }).addTo(map);
       directionsArray[0].setOrigin(L.latLng(newDestination)).setDestination(L.latLng(newDestination))
       //.addWaypoint(0, L.latLng(44.018217, -122.798284))
       .query();
 
-      _eventfulData.eventfulDataModule.getData();
+      _eventfulData.eventfulDataModule.getData(datum);
 
       map.removeLayer(cluster);
-      markerArray = [];
+      markers = [];
     } else {
       (0, _alias.dom)('#engineButton').id = 'killButton';
       (0, _alias.dom)('#engineButton2').id = 'killButton2';
@@ -177,8 +199,9 @@ var goOnTourMapsModule = (function () {
         return L.marker(latlng, markerStyle);
       },
       onEachFeature: function onEachFeature(feature, layer) {
-        layer.bindPopup('<h2>' + feature.properties.title + '</h2><br /><p>Performing at: <b>' + feature.properties.venueName + '</b><br />in <b>' + feature.properties.cityName + '</b>');
+        layer.bindPopup('<h2>' + feature.properties.title + '</h2><br /><p>Performing at: <b>' + feature.properties.venueName + '</b><br />in <b>' + feature.properties.venueCity + ', ' + feature.properties.stateAbbr + '</b>');
         layer.on('popupclose', function () {
+          _('#react-app').remove();
           _conStruction.conStructionModule.closeFooterAndKillPics();
         });
         layer.on('click', function (e) {
@@ -196,15 +219,12 @@ var goOnTourMapsModule = (function () {
             var venuePhotos = JSON.parse(jsonArray[1]);
             console.log(artistPhotos);
             console.log(venuePhotos);
-            _conStruction.conStructionModule.displayPopupFooter(feature, artistPhotos, venuePhotos);
+            (0, _alias.log)('uDataYo');
+            console.log(userData);
+            _conStruction.conStructionModule.displayPopupFooter(feature, artistPhotos, venuePhotos, userData);
           };
           xhr.open('post', url);
           xhr.send(fData);
-        });
-        layer.on('dblclick', function (e) {
-          newDestination = e.latlng;
-          directionsArray[0].setDestination(newDestination).query();
-          routeEngine();
         });
       }
     });
@@ -237,6 +257,8 @@ var goOnTourMapsModule = (function () {
     zoomBackOut: zoomBackOut,
     routeEngine: routeEngine,
     toMap: addGeoJsonMarkersBindEventInfo,
+    addDestination: addDestinationToRoute,
+    userFound: onLocationFound,
     bool: bool
   };
 })();

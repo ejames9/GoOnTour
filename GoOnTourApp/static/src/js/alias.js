@@ -128,7 +128,7 @@ var off = function off(event, el, callback) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
       el = el.slice(1);
-      return document.getElementById(id).removeEventListener(event, callback);
+      return document.getElementById(el).removeEventListener(event, callback);
     } else if (el[0] === '.') {
       el = el.slice(1);
       return document.getElementsByClassName(el)[0].removeEventListener(event, callback);
@@ -146,15 +146,13 @@ var log = function log(text) {
 };
 
 exports.log = log;
-var _xhr = function xhr(data, url, callback, method) {
-  _xhr = new XMLHttpRequest();
-  _xhr.onloadend = function () {
-    callback;
-    var response = this.responseText;
-  };
-  _xhr.open(method, url);
-  _xhr.send(data);
+var xhr = function xhr(fd, url, callback, method) {
+  var ajax = new XMLHttpRequest();
 
-  return response;
+  ajax.onloadend = function () {
+    callback;
+  };
+  ajax.open(method, url);
+  ajax.send(fd);
 };
-exports.xhr = _xhr;
+exports.xhr = xhr;

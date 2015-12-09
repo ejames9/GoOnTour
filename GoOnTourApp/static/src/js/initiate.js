@@ -1,3 +1,6 @@
+
+//Initiation Module, Needed as a bundling entry point.
+//My ES6 Modules
 'use strict';
 
 var _alias = require('./alias');
@@ -8,7 +11,11 @@ var _reactGeocoder = require('./reactGeocoder');
 
 var _reactDateRangePicker2 = require('./reactDateRangePicker2');
 
+//Vendor Modules, CommonJS Style.
 var React = require('react/addons');
+
+//Boolean Flags.
+window.locationFlag = true;
 
 (function () {
 

@@ -1,9 +1,16 @@
+
+//Initiation Module, Needed as a bundling entry point.
+//My ES6 Modules
 import { on, log, dom } from './alias';
 import { homeSliceModule as Home } from './homeSlice';
 import { reactGeocoder } from './reactGeocoder';
 import { DatePicker } from './reactDateRangePicker2';
 
+//Vendor Modules, CommonJS Style.
 var React = require('react/addons');
+
+//Boolean Flags.
+window.locationFlag = true;
 
 
 

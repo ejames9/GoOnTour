@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Query, QueryResults
+from .models import Query, QueryResults, ShowTripper, SearchParameters, Trip
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 import requests
@@ -29,6 +29,57 @@ def Map(request):
         return HttpResponse(template)
 
     return render(request, 'build/mapMain.html')
+
+
+@csrf_exempt
+def api_search_parameters(request):
+    if request.POST:
+        print request.POST
+        data = request.POST
+
+    def set_coordinates(request):
+        showtripper = ShowTripper()
+        showtripper.coordinates_lat = str(data['coordsLat'])
+        showtripper.coordinates_lon = str(data['coordsLon'])
+        showtripper.save()
+        i = showtripper.id
+        i = str(i)
+        print showtripper.coordinates_lat, showtripper.coordinates_lon
+
+        return HttpResponse(i)
+
+
+    def get_coordinates(data):
+        i = data['id']
+        print i
+        i = int(i)
+        print i
+        user = ShowTripper.objects.filter(pk=i)
+        print 'get coords'
+        print user
+        coordinates = {}
+        coordinates.lattitude = user.coordinates_lat
+        coordinates.longitude = user.coordinates_lon
+        print coordinates
+
+        return HttpResponse(json.dumps(coordinates))
+
+    # def set_fav_artist(data):
+    #     parameters = SearchParameters()
+    #     parameters.fav_artist = data['favArtist']
+    #     parameters.fav_genres = data['genres']
+
+    num = request.POST['function']
+    print num
+
+    function = {0: set_coordinates,
+                1: get_coordinates
+    }
+
+    return function[int(num)](data)
+
+
+
 
 
 @csrf_exempt

@@ -122,7 +122,7 @@ export var off = function(event, el, callback) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
       el = el.slice(1);
-      return document.getElementById(id).removeEventListener(event, callback);
+      return document.getElementById(el).removeEventListener(event, callback);
     } else if (el[0] === '.') {
       el = el.slice(1);
       return document.getElementsByClassName(el)[0].removeEventListener(event, callback);
@@ -139,14 +139,14 @@ export var log = function(text) {
   return console.log(text);
 };
 
-export var xhr = function(data, url, callback, method) {
-  xhr = new XMLHttpRequest();
-  xhr.onloadend = function() {
-    callback;
-    var response = this.responseText;
-  };
-  xhr.open(method, url);
-  xhr.send(data);
 
-  return response;
+
+export var xhr = function(fd, url, callback, method) {
+  var ajax  = new XMLHttpRequest();
+
+  ajax.onloadend = function() {
+    callback;
+  };
+  ajax.open(method, url);
+  ajax.send(fd);
 };

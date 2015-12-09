@@ -17,8 +17,8 @@ export const DatePicker = React.createClass({
 
   handleSelect(value, states) {
     this.setState({value, states});    log(value);
-    var elData = dom('#data-bridge');
-    var dataBridge = elData.getAttribute('data-bridge');  
+    var elData = dom('#data-bridge'); log(elData);
+    var dataBridge = elData.getAttribute('data-bridge');
         Construct.showSearchOperations(dataBridge);
   },
 
