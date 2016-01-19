@@ -2,6 +2,7 @@
   "name": "GoOnTour.org",
   "version": "0.0.0",
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
     "eventful-node": "^1.1.1",
     "html-to-text": "^1.5.0",
     "jquery": "^2.1.4",
@@ -9,9 +10,12 @@
     "leaflet-markercluster": "^0.2.0",
     "leaflet.locatecontrol": "^0.45.1",
     "lodash": "^3.10.1",
+    "mapbox-gl": "^0.12.1",
+    "mapbox-gl-leaflet": "0.0.1",
     "react-daterange-picker": "^0.12.2",
     "react-dom": "^0.14.3",
     "react-geocoder": "^2.5.0",
+    "three.js": "^0.73.0",
     "xor-crypt": "^1.0.0"
   }
 }

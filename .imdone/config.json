@@ -21,7 +21,15 @@
   },
   "lists": [
     {
+      "name": "NOTE",
+      "hidden": false
+    },
+    {
       "name": "TODO",
+      "hidden": false
+    },
+    {
+      "name": "FIXME",
       "hidden": false
     },
     {
@@ -30,14 +38,6 @@
     },
     {
       "name": "DONE",
-      "hidden": false
-    },
-    {
-      "name": "NOTE",
-      "hidden": false
-    },
-    {
-      "name": "FIXME",
       "hidden": false
     }
   ],

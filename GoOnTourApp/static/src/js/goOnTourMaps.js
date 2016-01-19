@@ -16,6 +16,8 @@ var _eventfulData = require('./eventfulData');
 
 var _homeSlice = require('./homeSlice');
 
+var _threeDGraphics = require('./threeDGraphics');
+
 //CommonJS Modules
 var moment = require('moment'),
     React = require('react/addons'),
@@ -24,11 +26,14 @@ var moment = require('moment'),
 // __ = require('lodash');
 require('leaflet');
 require('mapbox.js');
+//  require('mapbox-gl');
+//  require('mapbox-gl-leaflet');
 require('mapbox-directions.js');
 require('leaflet-markercluster');
 require('leaflet-locatecontrol');
+require('./node_modules/three.js/build/CSS3DRenderer');
 
-//#TODO:30 Implement Module Pattern.
+//#DONE:50 Implement Module Pattern.
 var goOnTourMapsModule = (function () {
 
   var coords;
@@ -44,13 +49,22 @@ var goOnTourMapsModule = (function () {
   var pathColorArray = ['#58292a', '#fdfca5', '#5c4c59', '#7bb64b', '#f5be57', '#091423', '#cd552d', '#d9e7f1', '#2b86f3', '#0d6711', '#662e7f'];
 
   L.mapbox.accessToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
+  // var mapBoxGLToken = 'pk.eyJ1IjoiZWphbWVzOSIsImEiOiIyNGNlYWUyYTU4M2Q4YTViYWM0YTBlMDRmNzIyMTYyNCJ9.RbU_-nlAAF6EOSVxj1kVMg';
 
   var initiateMap = function initiateMap(coordinates, data) {
+    var map;
     (0, _alias.log)('initMap');(0, _alias.log)(coordinates);(0, _alias.log)(data);
     (0, _alias.kill)('.lines');
     if (coordinates === null) {
-      map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
-      map.scrollWheelZoom.disable();
+      _threeDGraphics.threeDModule.threeDMap.call(this, coordinates);
+      _threeDGraphics.threeDModule.render.call(this);
+      var map = this.map;
+      window.map = map;
+      (0, _alias.log)('map');(0, _alias.log)(this);
+
+      // map.scrollWheelZoom.disable();
+      (0, _alias.log)('center');(0, _alias.log)(map.getCenter());
+
       var userLocater = L.control.locate({
         markerClass: L.circleMarker,
         locateOptions: {
@@ -60,14 +74,16 @@ var goOnTourMapsModule = (function () {
       userLocater.start();
       setTimeout(function () {
         onLocationFound(data);
-      }, 3000);
+      }, 1000);
     } else {
       var uCoords = [coordinates[1], coordinates[0]];
       var userData = {};
       userData.mapData = {};
       userData.mapData.userCoordinates = uCoords;
       (0, _alias.log)(['udata', userData]);
-      map = L.mapbox.map('map', 'mapbox.streets-satellite').setView(uCoords, 7);
+      _threeDGraphics.threeDModule.threeDMap(coordinates);
+      _threeDGraphics.threeDModule.render();
+
       map.scrollWheelZoom.disable();
       initializeDirectionsAPI(userData);
     }
@@ -99,19 +115,24 @@ var goOnTourMapsModule = (function () {
   };
 
   var onLocationFound = function onLocationFound(data) {
-    (0, _alias.log)('onFound');(0, _alias.log)(data);(0, _alias.log)(dataBridgeID);(0, _alias.log)(window === this);(0, _alias.log)(goOnTourMapsModule === this);
+    var coordinates,
+        lattitude,
+        longitude,
+        dBID = window.dataBridgeID;(0, _alias.log)('onFound');(0, _alias.log)(data);(0, _alias.log)(dBID);
     var url = '/api_search_parameters/',
         fd = new FormData();
     fd.append('function', 1);
-    fd.append('id', dataBridgeID);
+    fd.append('id', dBID);
 
-    (0, _alias.xhr)(fd, url, function () {
-      alert(this.responseText);
-    }, 'post');
-    (0, _alias.log)(coords);(0, _alias.log)('coords');
+    coordinates = (0, _alias.xhr)(fd, url);(0, _alias.log)('coordinates');(0, _alias.log)(coordinates);(0, _alias.log)(map);
+
+    longitude = coordinates.longitude;
+    lattitude = coordinates.lattitude;(0, _alias.log)([lattitude, longitude]);
+
     var userData = data;
     userData.mapData = {};
-    userData.mapData.userCoordinates = coordinates;
+    userData.mapData.userCoordinates = [lattitude, longitude];
+    map.setView([lattitude, longitude], 7);
 
     initializeDirectionsAPI(userData);
   };
@@ -132,7 +153,8 @@ var goOnTourMapsModule = (function () {
     var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
     var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions).addTo(map);
 
-    directions.setOrigin(L.latLng(userCoords[0], userCoords[1])).setDestination(L.latLng(43.018217, -124.798284))
+    directions.setOrigin(L.latLng(userCoords[0], userCoords[1]))
+    //.setDestination(L.latLng(43.018217, -124.798284))
     //.addWaypoint(0, L.latLng(44.018217, -122.798284))
     .query();
   };
@@ -181,19 +203,38 @@ var goOnTourMapsModule = (function () {
     }
   };
 
+  var checkinShitOut = function checkinShitOut(geojson) {
+    (0, _alias.log)('json');(0, _alias.log)(geojson[0].geometry.coordinates);
+    var coords = geojson[0].geometry.coordinates;
+    var coords2 = geojson[1].geometry.coordinates;
+    var coords3 = [geojson[0].geometry.coordinates[1], geojson[0].geometry.coordinates[0]];
+    var pixCoords = map.unproject(coords);
+    var pixCoords2 = map.latLngToLayerPoint(coords2);
+    var pixCoords3 = map.latLngToContainerPoint(coords3);
+    (0, _alias.log)(pixCoords);(0, _alias.log)(pixCoords2);(0, _alias.log)(pixCoords3);
+  };
+
   var addGeoJsonMarkersBindEventInfo = function addGeoJsonMarkersBindEventInfo(geojson, userData) {
+    checkinShitOut(geojson);
     userData.mapData = {};
     var mapData = userData.mapData;
 
     cluster = new L.MarkerClusterGroup();
+    var myIcon = L.divIcon({
+      className: '',
+      html: '<div class="marker"><i class="fa fa-music fa-1x" id="mus"></i></div>', //<img src="/static/build/images/showMarker2.png"/>
+      iconSize: [2, 4]
+    });
     var markerStyle = {
       draggable: false,
-      icon: L.mapbox.marker.icon({
-        'marker-size': '',
-        'marker-color': '#444',
-        'marker-symbol': 'music'
-      })
+      icon: myIcon
     };
+    // var markerStyle = {
+    // 	color: '#e8de43',
+    //   opacity: 1,
+    //   fillColor: '#eb3e4e',
+    //   fillOpacity: 1
+    // };
     markers = new L.geoJson(geojson, {
       pointToLayer: function pointToLayer(feature, latlng) {
         return L.marker(latlng, markerStyle);
@@ -205,6 +246,7 @@ var goOnTourMapsModule = (function () {
           _conStruction.conStructionModule.closeFooterAndKillPics();
         });
         layer.on('click', function (e) {
+          (0, _alias.log)('e');(0, _alias.log)(e);
           var xhr = new XMLHttpRequest();
           var fData = new FormData();
           var url = '/api_flickr_query/';
@@ -228,15 +270,17 @@ var goOnTourMapsModule = (function () {
         });
       }
     });
-    cluster.addLayer(markers);
 
+    cluster.addLayer(markers);
     map.addLayer(cluster);
     map.fitBounds(cluster.getBounds());
+    map.setZoom(5);
     (0, _alias.css)('#block').height = '80px';
 
     setTimeout(function () {
       var center = map.getCenter();
       var zoom = map.getZoom();
+      _threeDGraphics.threeDModule.threeDMarkers();
 
       userData.mapData.currentCenter = center;
       userData.mapData.currentZoom = zoom;
@@ -264,7 +308,13 @@ var goOnTourMapsModule = (function () {
 })();
 
 exports.goOnTourMapsModule = goOnTourMapsModule;
-//#DONE:0 Upload Photos
-//#DOING:0 Sell iPhone
-//#TODO:10 Order new iPhone
-//NOTE I like this.
+//#DONE:60 Upload Photos
+//#DONE:20 Sell iPhone
+//#DONE:40 Order new iPhone
+
+//DONE:0 Circle Music markers
+//DOING:0 New Popups
+//TODO:0 Fallback 2D view
+//TODO:10 List View for Results (Markers, Center When Clicked)
+//FIXME: Center Clusters at High Zoom level (Help Find)
+//TODO:20 Well Defined Explore and Routing Interfaces

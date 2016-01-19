@@ -61,7 +61,7 @@ export const conStructionModule = (function() {
     var menu = dom('#menu');
     var direct = dom('#directions');
 
-    if (Map.bool) {  //#TODO:0 Need a solution for Map.bool
+    if (Map.bool) {  //#DONE:30 Need a solution for Map.bool
       direct.style.width = '180px';
       log('mapBool');
       Map.bool = false;
@@ -116,7 +116,7 @@ export const conStructionModule = (function() {
         var footer = dom('#block');
             footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
 
-        refreshIntervalId = setInterval(function() {  //NOTE This may not work.
+        refreshIntervalId = setInterval(function() {  //NOTE:10 This may not work.
           var artistPics = artistPhotos.photos.photo;
           var j = Math.floor(Math.random() * 19);
           var footer = dom('#block');
@@ -197,7 +197,7 @@ export const conStructionModule = (function() {
         log('kill4');
          log(toolTipsPane);
         dom('#map').removeChild(toolTipsPane);
-      }, 3000); //NOTE May have problems with this function.
+      }, 3000); //NOTE:20 May have problems with this function.
     }
   };
 
@@ -233,11 +233,15 @@ export const conStructionModule = (function() {
           _('#mapLogo')
                   .css('opacity', '.7');
 
-      if (coordinates !== 0) {  //NOTE Removed this assignment => userCoords = coordinates;
+      if (coordinates !== 0) {  //NOTE:0 Removed this assignment => userCoords = coordinates;
         log('!0'); log(userData);
+        _('#map')
+              .css('display', 'block');
         Map.initMap(coordinates, userData);
       } else {
         log('0');
+        _('#map')
+              .css('display', 'block');
         Map.initMap(null, userData);
 
       }
@@ -284,9 +288,9 @@ export const conStructionModule = (function() {
 
   var showSearchOperations = function(data) {   // Using a closure here to group search operation functions together,
                                                 //  and also utilizing the resulting namespace for userData, so as
-    var decryptedData = xorCrypt(data);         // to avoid using a global variable.
+    // var decryptedData = xorCrypt(data);         // to avoid using a global variable.
 
-    var userData = JSON.parse(decryptedData); log('userData');log(userData);
+    var userData = {};       //JSON.parse(decryptedData); log('userData');log(userData);
         userData.searchParameters = {'startDate': null, 'endDate': null};
         userData.searchParameters.genres = [];
     var genre,
@@ -297,7 +301,27 @@ export const conStructionModule = (function() {
     var _collectKeywords = function() {
       _('#gel')
               .remove();
+      // _('#map')
+      //         .addClass('map');
+      // _('#trashCan')
+      //         .addClass('trashCan');
+      // _('body')
+      //         .addClass('stars');
+      _('#mapLogo')
+              .css('display', 'block');
+
       log(userData); log('ylkjlkj');
+      // var getPxBounds = map.getPixelBounds;
+      //
+      // map.getPixelBounds = function () {
+      //   var bounds = getPxBounds.call(this);
+      //   var val = 1000;
+      //   bounds.min.x=bounds.min.x-val;
+      //   bounds.min.y=bounds.min.y-val;
+      //   bounds.max.x=bounds.max.x+val;
+      //   bounds.max.y=bounds.max.y+val;
+      //   return bounds;
+      // };
       Events.getData(userData);
     };
 

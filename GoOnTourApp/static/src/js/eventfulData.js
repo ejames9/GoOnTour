@@ -195,7 +195,7 @@ var eventfulDataModule = (function () {
   //Use Formula Function to determine each event distance from the user, and add it to the eventsArray.
   var addDistanceFromUserToEventsArray = function addDistanceFromUserToEventsArray(eventsArray, userData) {
     if (typeof newDestination === 'undefined') {
-      //#TODO:20 need a solution for this global.
+      //#DONE:10 need a solution for this global.
       (0, _alias.log)(map);
       for (var i = 0; i < eventsArray.length; i++) {
         var distance = getDistanceFromLatLon(map._initialCenter.lat, map._initialCenter.lng, eventsArray[i][9], eventsArray[i][10]);

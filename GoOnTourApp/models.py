@@ -6,18 +6,18 @@ from django.utils import timezone
 class ShowTripper(models.Model):
     name = models.CharField(max_length=15, null=True)
     home = models.CharField(max_length=50, null=True)
-    coordinates_lat = models.FloatField(null=True, blank=True, default=0.0)
-    coordinates_lon = models.FloatField(null=True, blank=True, default=0.0)
+    coordinates_lat = models.FloatField()
+    coordinates_lon = models.FloatField()
 
     def __str__(self):
-        return name
+        return str(self.id)
 
     def __unicode__(self):
-        return name
+        return str(self.id)
 
 
 class Trip(models.Model):
-    showtripper = models.ForeignKey(ShowTripper, null=True)
+    showtripper = models.ForeignKey(ShowTripper)
     trip_name = models.CharField(max_length=50)
     travel_radius = models.IntegerField(null=True)
 
@@ -29,7 +29,7 @@ class Trip(models.Model):
 
 
 class SearchParameters(models.Model):
-    trip = models.ForeignKey(Trip, null=True)
+    trip = models.ForeignKey(Trip)
     fav_artist = models.CharField(max_length=20)
     fav_genres = models.CharField(max_length=50)
     start_date = models.DateField()
@@ -62,7 +62,7 @@ class Query(models.Model):
 class QueryResults(models.Model):
     query = models.ForeignKey(Query, related_name='entries')
     result = models.TextField()
-    time = models.DateTimeField(null=True)
+    # time = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.result

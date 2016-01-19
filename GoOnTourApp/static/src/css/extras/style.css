@@ -2,14 +2,26 @@
 
 
 html, body, main {
+  box-sizing: border-box;
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
 }
 #trashCan {
+  box-sizing: border-box;
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
+}
+
+.leaflet-popup {
+  position: absolute;
+  transform: rotateX(60deg);
+  -webkit-transform: rotateX(60deg);*/
+  -webkit-transform-style:preserve-3d;
+  transform-style:preserve-3d;
 }
 
 .custom-popup .leaflet-popup-content-wrapper {
@@ -19,6 +31,7 @@ html, body, main {
   font-family: Cabin Sketch;
   font-size:20px;
   line-height:24px;
+
   }
 .custom-popup .leaflet-popup-content-wrapper a {
   color:rgba(255,255,255,0.5);
@@ -65,8 +78,8 @@ html, body, main {
 }
 
 .popup-title p {
-  position: relative;
-  top: 25px;
+  position: absolute;
+  top: -10%;
   left: 2%;
   font-size: 46px;
 }
@@ -76,7 +89,7 @@ html, body, main {
   position: absolute;
   font-size: 22px;
   left: 40%;
-  bottom: 4%;
+  bottom: 3%;
   text-shadow: 1px 0px 0px white, 1px 1px 0px white, 0px 1px 0px white,
     -1px 1px 0px white, -1px 0px 0px white, -1px -1px 0px white,
     0px -1px 0px white, 1px -1px 0px white, 1px 4px 5px white;
@@ -115,7 +128,7 @@ html, body, main {
 
 .description {
   position: absolute;
-  top: 23%;
+  top: 15%;
   height: 200px;
   left: 55%;
   width: 32%;
@@ -142,10 +155,70 @@ html, body, main {
   background-color: red;
 }
 
+/*.leaflet-container {
+  background:none;
+}*/
+.leaflet-control-container {
+  display: none;
+}
+.marker {
+  height: 17px;
+  width: 17px;
+  background-color: red;
+  color: white;
+  border: 1px solid white;
+  border-radius: 20px;
+}
+#mus {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+}
 
+#starrySky {
+  position: absolute;
+  width: 1300px;
+  height: 770px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  /*display: none;*/
+}
+
+#container {
+  position: absolute;
+  left: 0;
+  height: 770px;
+  width: 1300px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  z-index: 994;
+}
+/*#container div div {
+  perspective: 10000px;
+  -webkit-perspective: 10000px;
+}*/
+
+.trashCan {
+  perspective: 750px;
+  -webkit-perspective: 750px;
+  overflow: hidden;
+}
 #map {
   height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: darkblue;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 996;
+  /*display: none;*/
 }
+
+
 
 #block {
   position: fixed;
@@ -155,10 +228,11 @@ html, body, main {
   background-color: #47612c;
   border: 1px solid green;
   opacity: .8;
-  z-index: 10;
+  z-index: 9999999999999;
   transition-duration: 1.5s;
 
 }
+
 
 #menu {
   height: 54px;
@@ -286,7 +360,7 @@ html, body, main {
 }
 
 #directions {
-    z-index: 999;
+    z-index: 9999;
     background: rgba(0,0,0,.8);
     top: 0;
     right: 0;
@@ -493,15 +567,13 @@ html, body, main {
 }
 
 #mapLogo {
-  height: 125px;
-  width: 125px;
+  height: 340px;
+  width: 340px;
   position: fixed;
-  z-index: 1001;
-  left: 44%;
-  top: 2%;
-}
-#maplogo:active {
-  opacity: .5;
+  display: none;
+  left: 37%;
+  top: -13%;
+  z-index: 500;
 }
 
 .mapbox-logo {

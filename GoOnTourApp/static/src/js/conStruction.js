@@ -69,7 +69,7 @@ var conStructionModule = (function () {
     var direct = (0, _alias.dom)('#directions');
 
     if (_goOnTourMaps.goOnTourMapsModule.bool) {
-      //#TODO:0 Need a solution for Map.bool
+      //#DONE:30 Need a solution for Map.bool
       direct.style.width = '180px';
       (0, _alias.log)('mapBool');
       _goOnTourMaps.goOnTourMapsModule.bool = false;
@@ -119,7 +119,7 @@ var conStructionModule = (function () {
         footer.innerHTML += '<img id="id" src="https://farm' + artistPics[String(i)].farm + '.staticflickr.com/' + artistPics[String(i)].server + '/' + artistPics[String(i)].id + '_' + artistPics[String(i)].secret + '_z.jpg"/>';
 
         refreshIntervalId = setInterval(function () {
-          //NOTE This may not work.
+          //NOTE:10 This may not work.
           var artistPics = artistPhotos.photos.photo;
           var j = Math.floor(Math.random() * 19);
           var footer = (0, _alias.dom)('#block');
@@ -195,7 +195,7 @@ var conStructionModule = (function () {
         (0, _alias.log)('kill4');
         (0, _alias.log)(toolTipsPane);
         (0, _alias.dom)('#map').removeChild(toolTipsPane);
-      }, 3000); //NOTE May have problems with this function.
+      }, 3000); //NOTE:20 May have problems with this function.
     }
   };
 
@@ -226,11 +226,13 @@ var conStructionModule = (function () {
       _('#mapLogo').css('opacity', '.7');
 
       if (coordinates !== 0) {
-        //NOTE Removed this assignment => userCoords = coordinates;
+        //NOTE:0 Removed this assignment => userCoords = coordinates;
         (0, _alias.log)('!0');(0, _alias.log)(userData);
+        _('#map').css('display', 'block');
         _goOnTourMaps.goOnTourMapsModule.initMap(coordinates, userData);
       } else {
         (0, _alias.log)('0');
+        _('#map').css('display', 'block');
         _goOnTourMaps.goOnTourMapsModule.initMap(null, userData);
       }
     };
@@ -273,9 +275,9 @@ var conStructionModule = (function () {
   var showSearchOperations = function showSearchOperations(data) {
     // Using a closure here to group search operation functions together,
     //  and also utilizing the resulting namespace for userData, so as
-    var decryptedData = xorCrypt(data); // to avoid using a global variable.
+    // var decryptedData = xorCrypt(data);         // to avoid using a global variable.
 
-    var userData = JSON.parse(decryptedData);(0, _alias.log)('userData');(0, _alias.log)(userData);
+    var userData = {}; //JSON.parse(decryptedData); log('userData');log(userData);
     userData.searchParameters = { 'startDate': null, 'endDate': null };
     userData.searchParameters.genres = [];
     var genre,
@@ -284,7 +286,26 @@ var conStructionModule = (function () {
 
     var _collectKeywords = function _collectKeywords() {
       _('#gel').remove();
+      // _('#map')
+      //         .addClass('map');
+      // _('#trashCan')
+      //         .addClass('trashCan');
+      // _('body')
+      //         .addClass('stars');
+      _('#mapLogo').css('display', 'block');
+
       (0, _alias.log)(userData);(0, _alias.log)('ylkjlkj');
+      // var getPxBounds = map.getPixelBounds;
+      //
+      // map.getPixelBounds = function () {
+      //   var bounds = getPxBounds.call(this);
+      //   var val = 1000;
+      //   bounds.min.x=bounds.min.x-val;
+      //   bounds.min.y=bounds.min.y-val;
+      //   bounds.max.x=bounds.max.x+val;
+      //   bounds.max.y=bounds.max.y+val;
+      //   return bounds;
+      // };
       _eventfulData.eventfulDataModule.getData(userData);
     };
 

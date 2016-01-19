@@ -80,13 +80,13 @@ var homeSliceModule = (function () {
   };
 
   var initHome = function initHome(userData) {
-    (0, _alias.log)('initiate');
-    if (homeHashBool === true) {
-      (0, _alias.log)(homeHashBool);
-      window.location.hash = '';
-      homeHashBool = false;
-    }
-    _goOnTourMaps.goOnTourMapsModule.mapHashBool = true;
+    //   log('initiate');
+    // if (homeHashBool === true) {
+    //   log(homeHashBool);
+    //   window.location.hash = '';
+    //   homeHashBool = false;
+    // }
+    // Map.mapHashBool = true;
 
     var findShowsButton = (0, _alias.dom)('#circle');
     (0, _alias.log)(findShowsButton);

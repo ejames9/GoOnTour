@@ -1,10 +1,11 @@
 // Aliases for commonly repeated functions.
-
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+require('babel-polyfill');
+
 var make = function make(tag) {
   return document.createElement(tag);
 };
@@ -71,7 +72,7 @@ var css = function css(el) {
 };
 
 exports.css = css;
-// export var once = function(event, el, callback) {  //NOTE once function needs work.
+// export var once = function(event, el, callback) {  //NOTE:30 once function needs work.
 //   if (typeof el === 'string') {
 //     if (el[0] === '#') {
 //       el = el.slice(1);
@@ -146,13 +147,36 @@ var log = function log(text) {
 };
 
 exports.log = log;
-var xhr = function xhr(fd, url, callback, method) {
-  var ajax = new XMLHttpRequest();
+var sleep = function sleep(milliseconds) {
+  var start = new Date().getTime();
+  while (true) {
+    if (new Date().getTime() - start > milliseconds) {
+      break;
+    }
+  }
+};
 
-  ajax.onloadend = function () {
-    callback;
+exports.sleep = sleep;
+var xhr = function xhr(fd, url, method) {
+  log('fd');log(fd);
+
+  var m = method || 'post';
+  var val;
+
+  var ajax = function ajax() {
+    var ajax = new XMLHttpRequest();
+
+    ajax.onloadend = function () {
+      if (ajax.status === 200) {
+        val = this.response;
+      }
+    };
+    ajax.open(m, url, false);
+    ajax.send(fd);
   };
-  ajax.open(method, url);
-  ajax.send(fd);
+  ajax(fd, url, m);
+  val = JSON.parse(val);
+
+  return val;
 };
 exports.xhr = xhr;

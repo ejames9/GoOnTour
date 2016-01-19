@@ -38,9 +38,9 @@ var DatePicker = _reactAddons2['default'].createClass({
 
   handleSelect: function handleSelect(value, states) {
     this.setState({ value: value, states: states });(0, _alias.log)(value);
-    var elData = (0, _alias.dom)('#data-bridge');(0, _alias.log)(elData);
-    var dataBridge = elData.getAttribute('data-bridge');
-    _conStruction.conStructionModule.showSearchOperations(dataBridge);
+    // var elData = dom('#data-bridge'); log(elData);
+    // var dataBridge = elData.getAttribute('data-bridge');
+    _conStruction.conStructionModule.showSearchOperations();
   },
 
   render: function render() {
