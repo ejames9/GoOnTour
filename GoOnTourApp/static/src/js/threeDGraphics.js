@@ -12,6 +12,7 @@ var _alias = require('./alias');
 
 var threeDModule = (function () {
 
+  //The module's "globals".
   var scene,
       camera,
       sphereObj,
@@ -31,9 +32,11 @@ var threeDModule = (function () {
     // get the DOM element to attach to
     var _container = document.getElementById('container');
 
+    //css3DRenderer for the map.
     css3DRenderer = new THREE.CSS3DRenderer();
     css3DRenderer.setSize(width, height);
 
+    //Setting up the camera.
     camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
     scene = new THREE.Scene();
     // add the camera to the scene
@@ -57,6 +60,8 @@ var threeDModule = (function () {
     // Initialize map in map div
     L.mapbox.accessToken = token;
 
+    //This is an extension of the goOnTourMapsModule. if Construct.loadmap() calls Map.initMap() with the coordinates arguments null,
+    //the map will initialize with a set view and zoom, otherwise, it will be initialized with the given coordinates and a zoom level of 7.
     if (coordinates === null) {
       this.map = L.mapbox.map('map', 'mapbox.streets-satellite').setView([45.12, -86.69], 5);
     } else {
@@ -99,6 +104,8 @@ var threeDModule = (function () {
     scene.add(mapObj);
   };
 
+  //This function is not yet used in the showTrippers application, it is leftover from experimental phase. It may be used to
+  //render a 3D moon in the future.
   var renderThreeDMoon = function renderThreeDMoon() {
     var _container2 = document.getElementById('container2');
 
@@ -125,6 +132,8 @@ var threeDModule = (function () {
     scene.add(sphereObj);
   };
 
+  //This function was an experiment, and is not being used for rendering markers in the current state of the application.
+  //It may be useful in the future.
   var renderThreeDMarkers = function renderThreeDMarkers() {
     var _containers = document.getElementsByClassName('marker');(0, _alias.log)('tainers');(0, _alias.log)(_containers);(0, _alias.log)(camera);(0, _alias.log)(scene);
 
@@ -160,7 +169,7 @@ var threeDModule = (function () {
     }
   };
 
-  //Render
+  //This is an animation loop.
   var animate = function animate() {
     requestAnimationFrame(animate);
 
@@ -170,10 +179,12 @@ var threeDModule = (function () {
     css3DRenderer.render(scene, camera);
   };
 
+  //This is simply a call to render the 3D map.
   var render = function render() {
     css3DRenderer.render(scene, camera);
   };
 
+  //The module's public functions.
   return {
     threeDMap: renderThreeDMap,
     threeDMoon: renderThreeDMoon,

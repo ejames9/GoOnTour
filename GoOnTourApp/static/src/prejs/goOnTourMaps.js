@@ -163,7 +163,7 @@ export const goOnTourMapsModule = (function() {
     var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
     var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions).addTo(map);
 
-    directions                                                 //Set origin of Directios API.
+    directions                                                 //Set origin of Directions API.
         .setOrigin(L.latLng(userCoords[0], userCoords[1]))
       //.setDestination(L.latLng(43.018217, -124.798284))
       //.addWaypoint(0, L.latLng(44.018217, -122.798284))
@@ -186,7 +186,7 @@ export const goOnTourMapsModule = (function() {
 
 
   //This function is the callback for an eventlistener on one of the map navigation buttons. It uses currentCenter and currentZoom properties
-  //of userData.mapData to return the user to a preset center and map zoom, if the user gets lost somewhere in the map.
+  //of userData.mapData to return the user to a preset center and map zoom, incase the user gets lost somewhere in the map.
   var zoomBackOut = function(userData) {
     map.setView(userData.mapData.currentCenter, userData.mapData.currentZoom);
   };
@@ -194,7 +194,10 @@ export const goOnTourMapsModule = (function() {
   //Unwritten function. Will essentially be the opposite of routeEngine, erasing the current Directions layer, and returning to the previous.
   var reRouteEngine = function() {};
 
-  //
+  //This function will be rewritten when the time comes to implement it. In it's current form, it check a global flag to see if the current date is equal to the ending date
+  //of the search period. If it is not equal, it will create a new directions layer for a new leg of the trip. If it is equal, it will not. The function is
+  //called by a button in the map nav panel, that a user may click when ready to set a particular leg of the trip. It works kind of like a loop, but the function is essentially
+  //paused while the user sets the next leg. A better implementation of this will be to use an es6 generator function.
   var routeEngine = function(datum) {
     var u         = datum.searchParameters;
     var dateArray = [u.startDate, u.endDate]; log(dateArray);
@@ -230,6 +233,7 @@ export const goOnTourMapsModule = (function() {
   	}
   };
 
+  //Function used for checking shit out.
   var checkinShitOut = function(geojson) {
     log('json'); log(geojson[0].geometry.coordinates);
     var coords = geojson[0].geometry.coordinates;
@@ -241,15 +245,20 @@ export const goOnTourMapsModule = (function() {
     log(pixCoords); log(pixCoords2); log(pixCoords3);
   };
 
+
+  //This function takes pre-parsed geojson as it's first argument and sets markers according to geographic coordinates. It is called by createGeoJson() in the eventfulDataModule.
+  //The function also creates marker clusters using the leaflet-markercluster plugin.
   var addGeoJsonMarkersBindEventInfo = function(geojson, userData) {
     checkinShitOut(geojson);
     userData.mapData = {};
     var mapData = userData.mapData;
 
-  	cluster = new L.MarkerClusterGroup();
+  	cluster = new L.MarkerClusterGroup(); //instantiate ClusterGroup.
+
+    //Setting up custom circle markers for the 3D map.
     var myIcon = L.divIcon({
       className: '',
-           html: '<div class="marker"><i class="fa fa-music fa-1x" id="mus"></i></div>',         //<img src="/static/build/images/showMarker2.png"/>
+           html: '<div class="marker"><i class="fa fa-music fa-1x" id="mus"></i></div>',  //<img src="/static/build/images/showMarker2.png"/>
        iconSize: [2, 4]
     });
   	var markerStyle = {
@@ -263,19 +272,19 @@ export const goOnTourMapsModule = (function() {
     //   fillOpacity: 1
   	// };
   	markers = new L.geoJson(geojson, {
-  		pointToLayer: function (feature, latlng) {
+  		pointToLayer: function (feature, latlng) { //Create markers.
   			return L.marker(latlng, markerStyle);
   		},
-  		onEachFeature: function(feature, layer) {
+  		onEachFeature: function(feature, layer) { //Create popups.
   			layer.bindPopup(
   				'<h2>' + feature.properties.title + '</h2><br /><p>Performing at: <b>' + feature.properties.venueName + '</b><br />in <b>' + feature.properties.venueCity + ', ' + feature.properties.stateAbbr +  '</b>'
   			);
-  			layer.on('popupclose', function() {
+  			layer.on('popupclose', function() { //On popupclose, remove the reactFlickrPopupFooter app, minimize the footer and kill flickr photos.
           _('#react-app')
                    .remove();
   				Construct.closeFooterAndKillPics();
   			});
-  			layer.on('click', function(e) {
+  			layer.on('click', function(e) { //Event Handler to call flickr API when a marker is clicked.
           log('e'); log(e);
   				var xhr = new XMLHttpRequest();
   				var fData = new FormData();
@@ -289,11 +298,11 @@ export const goOnTourMapsModule = (function() {
   					var jsonArray = JSON.parse(this.responseText);
   					var artistPhotos = JSON.parse(jsonArray[0]);
   					var venuePhotos = JSON.parse(jsonArray[1]);
-  							console.log(artistPhotos);
-  							console.log(venuePhotos);
+  							// console.log(artistPhotos);
+  							// console.log(venuePhotos);
                 log('uDataYo');
-                console.log(userData);
-  							Construct.displayPopupFooter(feature, artistPhotos, venuePhotos, userData);
+                log(userData);
+  							Construct.displayPopupFooter(feature, artistPhotos, venuePhotos, userData); //Once flickr photos are loaded, popupfooter is activated.
   				};
   				xhr.open('post', url);
   				xhr.send(fData);
@@ -302,33 +311,35 @@ export const goOnTourMapsModule = (function() {
   	});
 
 
-  	cluster.addLayer(markers);
-  	    map.addLayer(cluster);
+  	cluster.addLayer(markers);  //Add marker layer to cluster.
+  	    map.addLayer(cluster);  //Add cluster layer to map, fit map bounds to markers and set zoom level.
   	    map.fitBounds(cluster.getBounds());
         map.setZoom(5);
   	        css('#block').height = '80px';
 
   	setTimeout( function() {
-  		var center = map.getCenter();
+  		var center = map.getCenter();   //Set currentCenter and currentZoom properties of userData.mapData for zoomBackOut() function.
   		var zoom   = map.getZoom();
-      ThreeD.threeDMarkers();
+      // ThreeD.threeDMarkers();
 
           userData.mapData.currentCenter = center;
           userData.mapData.currentZoom   = zoom;
   	}, 800);
 
   	if (bool2) {
-      _('#directions, #block')
+      _('#directions, #block')           //Show map nav panel and footer
             .css('display', 'block');
       _('#mapLogo')
               .css('opacity', '1');
 
       log(userData);
-  		Construct.buildButtons(userData);
+  		Construct.buildButtons(userData); //Build map nav panel buttons.
   		bool2 = false;
   	}
   };
 
+
+  //the modules' public functions.
        return {
         initMap: initiateMap,
     zoomBackOut: zoomBackOut,

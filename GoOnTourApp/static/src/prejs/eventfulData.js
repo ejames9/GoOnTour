@@ -1,9 +1,9 @@
 
 
-// JavaScript Module for GoOnTour.org. Parses Eventful Data.
+// JavaScript Module for GoOnTour.org. Parses Eventful Data for map markers.
 import { dom, log } from './alias';
 import { goOnTourMapsModule as Map } from './goOnTourMaps';
-import moment from 'moment';
+import moment from 'moment';  //moment.js, JS library for manipulating time, date data.
 
 
 
@@ -19,14 +19,17 @@ export const eventfulDataModule = (function() {
   var searchParameters;
 
 
+  //This function is called by the _collectKeywords() function, in the showSearchOperations() space, in the conStructionModule. It
+  //collects all necessary criteria for an eventful query, and calls the database to see if this search has been made before. userData is
+  //passed in and used for some of the data.
   var getEventfulDataForMarkers = function(userData) {
     var user = userData.searchParameters;
     var what = user.favArtist;
-        user.genres.unshift(user.favArtist);
-        keywords = user.genres.join(' || ');
+        user.genres.unshift(user.favArtist);         //Add favArtist to beginning of genres list.
+        keywords = user.genres.join(' || ');         //Format genres list into proper "or" format for search.
         log(keywords);
-        if (typeof startDate === 'undefined') {
-          startDate = user.startDate;      log(startDate);
+        if (typeof startDate === 'undefined') {               //If startDate and endDate variables are not yet set, set them with userData.
+          startDate = user.startDate;      log(startDate);    //If they are, reset them with the variable.
         } else {
           startDate = startDate;
         }
@@ -36,7 +39,7 @@ export const eventfulDataModule = (function() {
           endDate = endDate;
         }
 
-    var formattedWhen = getFormattedWhen(startDate, endDate);
+    var formattedWhen = getFormattedWhen(startDate, endDate); //Format dates for proper search format.
 
         searchParameters = {
           app_key: "hQBcbKnVd94BDtCc",
@@ -56,8 +59,8 @@ export const eventfulDataModule = (function() {
     var request = new XMLHttpRequest();
     var url     = "/api_eventful_query_results/";
 
-    request.onloadend = function () {
-      if (this.responseText === "Make API Call.") {
+    request.onloadend = function () {                      //Search database for search criteria. If not found, call makeAPICallAndParseResults()
+      if (this.responseText === "Make API Call.") {        //function. If found, skip ahead to parseResults() function.
         alert('Calling Eventful API.');
         makeAPICallAndParseResults(formattedWhen, keywords, userData);
       } else {
@@ -69,12 +72,14 @@ export const eventfulDataModule = (function() {
     request.send(formData);
   };
 
+
+  //Using search parameters from previous function, call eventful API, and organize results into an array of arrays with pertinent data.
   var makeAPICallAndParseResults = function (when, keys, userData) {
     EVDB.API.call("/events/search", searchParameters, function (data) {
-      var objects = data.events.event;           log(data);
+      var objects = data.events.event;
           object  = data;
           eventsArray = [];
-          for (var i = 0; i < objects.length; i++) {
+          for (var i = 0; i < objects.length; i++) {  //Loop for creating individual event arrays.
             var events = [];
              var e = events;
                       e.push(objects[i].title);
@@ -91,10 +96,10 @@ export const eventfulDataModule = (function() {
                       e.push(objects[i].region_name);
                       e.push(objects[i].region_abbr);
                       e.push(objects[i].image);
-           eventsArray.push(e);
+           eventsArray.push(e);                     //Push event.
           }
-      addDistanceFromUserToEventsArray(eventsArray, userData);
-      var stringResult = JSON.stringify(data);
+      addDistanceFromUserToEventsArray(eventsArray, userData); //First, send array to  this function to get distance from user, then
+      var stringResult = JSON.stringify(data);                 //stringify and store in database, incase search is made again.
       var formData = new FormData();
       formData.append('result', stringResult);
       formData.append('keys', keys);
@@ -111,6 +116,10 @@ export const eventfulDataModule = (function() {
     });
   };
 
+
+  //If getEventfulDataForMarkers() function finds search criteria in the database, it calls this function with the results, and userData.
+  //The function then arranges the data into an array of event arrays, and sends the result to addDistanceFromUserToEventsArray(),
+  //just like the previous function.
   var parseResults = function(data, userData) {
     var objects = data.events.event;            log(objects);
          eventsArray = [];
@@ -136,17 +145,23 @@ export const eventfulDataModule = (function() {
       addDistanceFromUserToEventsArray(eventsArray, userData);
   };
 
+
+  //This function uses the moment.js library to arrange dates into a format the eventful API can use.
   var getFormattedWhen = function(startDate, endDate) {
     startDate = moment(startDate).format('YYYYMMDD00');
       endDate = moment(endDate).format('YYYYMMDD00');
 
-    var formattedWhen = startDate + '-' + endDate; log('formwhen');log(formattedWhen);
+    var formattedWhen = startDate + '-' + endDate; log('formwhen');log(formattedWhen); //Combine startDate and endDate into string.
     return formattedWhen;
   };
 
+
+  //This function is called by the parseMarkersByDistance() function below, once all entries which are outside the specified radius are eliminated.
+  //The function takes the event array, and creates an array of geojson objects that mapbox can use to render markers and bind data, and sends it to
+  //addGeoJsonMarkersBindEventInfo() function in the goOnTourMapsModule..
   var createGeoJson = function(eArray, userData) {
     var geojson = [];
-    for (var i = 0; i < eArray.length; i++)  {
+    for (var i = 0; i < eArray.length; i++)  {               //Loop for creating individual geojson objects.
       var object                             = {};
           object.type                        = "Feature";
           object.geometry                    = {};
@@ -168,9 +183,9 @@ export const eventfulDataModule = (function() {
           object.properties['marker-color']  = "#444";
           object.properties['marker-size']   = "medium";
           object.properties['marker-symbol'] = "music";
-    geojson.push(object);
-  }                                                             log(geojson);
-    Map.toMap(geojson, userData);
+    geojson.push(object);                                    //Push geojson object into array.
+  }
+    Map.toMap(geojson, userData); //Abbreviation for goOnTourMapsModule.addGeoJsonMarkersBindEventInfo(). Geojson is sent along with userData.
 
     return geojson;
   };
@@ -184,7 +199,7 @@ export const eventfulDataModule = (function() {
   //}; getKeywords("jam bands, rock, country, apples")
 
 
-  //Use Formula Function to determine each event distance from the user, and add it to the eventsArray.
+  //Use Haversine Formula Function to determine each event distance from the user, and add it to the eventsArray.
   var addDistanceFromUserToEventsArray = function(eventsArray, userData) {
     if (typeof newDestination === 'undefined') {  //#DONE:10 need a solution for this global.
       log(map);
@@ -212,7 +227,7 @@ export const eventfulDataModule = (function() {
     }
     log(eArray);
     // addMarkers(eArray, map);
-    createGeoJson(eArray, userData);
+    createGeoJson(eArray, userData); //Once all entries outside of radius are eliminated, send result to createGeoJson() function, along with userData.
   };
 
 
