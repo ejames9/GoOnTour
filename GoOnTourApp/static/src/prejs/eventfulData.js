@@ -155,7 +155,7 @@ export const eventfulDataModule = (function() {
           object.properties                  = {};
           object.properties['title']         = eArray[i][0];
           object.properties['description']   = eArray[i][5];
-          object.properties['venueCity']      = eArray[i][1];
+          object.properties['venueCity']     = eArray[i][1];
           object.properties['startTime']     = eArray[i][3];
           object.properties['venueName']     = eArray[i][2];
           object.properties['performers']    = eArray[i][4];
@@ -186,7 +186,7 @@ export const eventfulDataModule = (function() {
 
   //Use Formula Function to determine each event distance from the user, and add it to the eventsArray.
   var addDistanceFromUserToEventsArray = function(eventsArray, userData) {
-    if (typeof newDestination === 'undefined') {  //#TODO:20 need a solution for this global.
+    if (typeof newDestination === 'undefined') {  //#DONE:10 need a solution for this global.
       log(map);
       for (var i = 0; i < eventsArray.length; i++) {
         var distance = getDistanceFromLatLon(map._initialCenter.lat, map._initialCenter.lng, eventsArray[i][9], eventsArray[i][10]);

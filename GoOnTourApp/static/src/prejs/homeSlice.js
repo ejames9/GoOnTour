@@ -79,13 +79,13 @@ var startLocationInput1 = dom('.input1');
   };
 
   var initHome = function(userData) {
-      log('initiate');
-    if (homeHashBool === true) {
-      log(homeHashBool);
-      window.location.hash = '';
-      homeHashBool = false;
-    }
-    Map.mapHashBool = true;
+    //   log('initiate');
+    // if (homeHashBool === true) {
+    //   log(homeHashBool);
+    //   window.location.hash = '';
+    //   homeHashBool = false;
+    // }
+    // Map.mapHashBool = true;
 
     var findShowsButton = dom('#circle');
     log(findShowsButton);

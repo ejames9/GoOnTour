@@ -1,0 +1,305 @@
+{
+  "_args": [
+    [
+      "mapbox-gl",
+      "/Users/ericfoster/Documents/Web_Sites/GoOnTour/GoOnTourApp/static/src/js"
+    ]
+  ],
+  "_from": "mapbox-gl@*",
+  "_id": "mapbox-gl@0.12.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/mapbox-gl",
+  "_npmUser": {
+    "email": "lucas@mapbox.com",
+    "name": "lucaswoj"
+  },
+  "_npmVersion": "1.4.28",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "mapbox-gl",
+    "raw": "mapbox-gl",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.12.1.tgz",
+  "_shasum": "074c636125b2ae6000104043fa24a6ab3a157e4f",
+  "_shrinkwrap": null,
+  "_spec": "mapbox-gl",
+  "_where": "/Users/ericfoster/Documents/Web_Sites/GoOnTour/GoOnTourApp/static/src/js",
+  "browser": {
+    "./js/util/ajax.js": "./js/util/browser/ajax.js",
+    "./js/util/browser.js": "./js/util/browser/browser.js",
+    "./js/util/canvas.js": "./js/util/browser/canvas.js",
+    "./js/util/dispatcher.js": "./js/util/browser/dispatcher.js",
+    "./js/util/dom.js": "./js/util/browser/dom.js"
+  },
+  "browserify": {
+    "transform": [
+      "brfs",
+      "envify"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/mapbox/mapbox-gl-js/issues"
+  },
+  "dependencies": {
+    "brfs": "^1.4.0",
+    "csscolorparser": "^1.0.2",
+    "envify": "^3.4.0",
+    "feature-filter": "^1.0.2",
+    "geojson-vt": "^2.1.0",
+    "gl": "^2.1.5",
+    "gl-matrix": "^2.3.1",
+    "mapbox-gl-function": "^1.0.0",
+    "mapbox-gl-style-spec": "^8.3.0",
+    "minifyify": "^7.0.1",
+    "pbf": "^1.3.2",
+    "pngjs": "^2.2.0",
+    "point-geometry": "^0.0.0",
+    "rbush": "^1.4.0",
+    "request": "^2.39.0",
+    "resolve-url": "^0.2.1",
+    "unassertify": "^2.0.0",
+    "unitbezier": "^0.0.0",
+    "vector-tile": "^1.1.3",
+    "webworkify": "^1.0.2"
+  },
+  "description": "A WebGL interactive maps library",
+  "devDependencies": {
+    "benchmark": "~1.0.0",
+    "browserify": "^12.0.1",
+    "budo": "^7.0.2",
+    "documentation": "3.0.0",
+    "eslint": "^1.5.0",
+    "eslint-config-mourner": "^1.0.0",
+    "istanbul": "^0.4.1",
+    "mapbox-gl-test-suite": "git+https://github.com/mapbox/mapbox-gl-test-suite#117067ee1789203c46d7648eef8dd49659e62090",
+    "prova": "^2.1.2",
+    "sinon": "^1.15.4",
+    "st": "^1.0.0",
+    "through": "^2.3.7",
+    "watchify": "^3.2.2"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "074c636125b2ae6000104043fa24a6ab3a157e4f",
+    "tarball": "http://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.12.1.tgz"
+  },
+  "gitHead": "ec8272415296c3252df38cbefd91976b0d762b29",
+  "homepage": "https://github.com/mapbox/mapbox-gl-js",
+  "license": "BSD-3-Clause",
+  "main": "js/mapbox-gl.js",
+  "maintainers": [
+    {
+      "name": "lucaswoj",
+      "email": "lucas@lucaswoj.com"
+    },
+    {
+      "name": "aaronlidman",
+      "email": "aaronlidman@gmail.com"
+    },
+    {
+      "name": "ansis",
+      "email": "ansis.brammanis@gmail.com"
+    },
+    {
+      "name": "bergwerkgis",
+      "email": "wb@bergwerk-gis.at"
+    },
+    {
+      "name": "bhousel",
+      "email": "bryan@mapbox.com"
+    },
+    {
+      "name": "bsudekum",
+      "email": "bobby@mapbox.com"
+    },
+    {
+      "name": "camilleanne",
+      "email": "camille@mapbox.com"
+    },
+    {
+      "name": "dnomadb",
+      "email": "damon@mapbox.com"
+    },
+    {
+      "name": "dthompson",
+      "email": "dthompson@gmail.com"
+    },
+    {
+      "name": "edenh",
+      "email": "eden@mapbox.com"
+    },
+    {
+      "name": "emilymcafee",
+      "email": "emily@mapbox.com"
+    },
+    {
+      "name": "flippmoke",
+      "email": "flippmoke@gmail.com"
+    },
+    {
+      "name": "freenerd",
+      "email": "spam@freenerd.de"
+    },
+    {
+      "name": "gretacb",
+      "email": "carol@mapbox.com"
+    },
+    {
+      "name": "heyitsgarrett",
+      "email": "heyitsgarrett@gmail.com"
+    },
+    {
+      "name": "ian29",
+      "email": "ian.villeda@gmail.com"
+    },
+    {
+      "name": "ianshward",
+      "email": "ian@mapbox.com"
+    },
+    {
+      "name": "ingalls",
+      "email": "nicholas.ingalls@gmail.com"
+    },
+    {
+      "name": "jfirebaugh",
+      "email": "john.firebaugh@gmail.com"
+    },
+    {
+      "name": "jrpruit1",
+      "email": "jake@jakepruitt.com"
+    },
+    {
+      "name": "karenzshea",
+      "email": "karen@mapbox.com"
+    },
+    {
+      "name": "kkaefer",
+      "email": "kkaefer@gmail.com"
+    },
+    {
+      "name": "lbud",
+      "email": "lauren@mapbox.com"
+    },
+    {
+      "name": "ajashton",
+      "email": "aj.ashton@gmail.com"
+    },
+    {
+      "name": "lxbarth",
+      "email": "alex@mapbox.com"
+    },
+    {
+      "name": "lyzidiamond",
+      "email": "lyzi@mapbox.com"
+    },
+    {
+      "name": "mapbox",
+      "email": "accounts@mapbox.com"
+    },
+    {
+      "name": "mateov",
+      "email": "matt@mapbox.com"
+    },
+    {
+      "name": "mcwhittemore",
+      "email": "mcwhittemore@gmail.com"
+    },
+    {
+      "name": "miccolis",
+      "email": "jeff@miccolis.net"
+    },
+    {
+      "name": "mikemorris",
+      "email": "michael.patrick.morris@gmail.com"
+    },
+    {
+      "name": "morganherlocker",
+      "email": "morgan.herlocker@gmail.com"
+    },
+    {
+      "name": "mourner",
+      "email": "agafonkin@gmail.com"
+    },
+    {
+      "name": "nickidlugash",
+      "email": "nicki@mapbox.com"
+    },
+    {
+      "name": "planemad",
+      "email": "arun.planemad@gmail.com"
+    },
+    {
+      "name": "rclark",
+      "email": "ryan.clark.j@gmail.com"
+    },
+    {
+      "name": "samanbb",
+      "email": "saman@mapbox.com"
+    },
+    {
+      "name": "sbma44",
+      "email": "tlee@mapbox.com"
+    },
+    {
+      "name": "scothis",
+      "email": "scothis@gmail.com"
+    },
+    {
+      "name": "sgillies",
+      "email": "sean@mapbox.com"
+    },
+    {
+      "name": "springmeyer",
+      "email": "dane@mapbox.com"
+    },
+    {
+      "name": "themarex",
+      "email": "patrick@mapbox.com"
+    },
+    {
+      "name": "tmcw",
+      "email": "tom@macwright.org"
+    },
+    {
+      "name": "tristen",
+      "email": "tristen.brown@gmail.com"
+    },
+    {
+      "name": "willwhite",
+      "email": "will@mapbox.com"
+    },
+    {
+      "name": "yhahn",
+      "email": "young@mapbox.com"
+    }
+  ],
+  "name": "mapbox-gl",
+  "optionalDependencies": {
+    "gl": "^2.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mapbox/mapbox-gl-js.git"
+  },
+  "scripts": {
+    "build": "browserify -d js/mapbox-gl.js --standalone mapboxgl > dist/mapbox-gl-dev.js && npm run docs",
+    "cov": "istanbul cover prova test/js/*/*.js test/render.test.js -x js/lib/debugtext.js",
+    "docs": "documentation --github --format html --theme ./docs/_theme --output docs/api/",
+    "lint": "eslint js test && documentation --lint",
+    "prepublish": "npm run build && npm run production",
+    "production": "browserify js/mapbox-gl.js --debug --transform unassertify --plugin [minifyify --map mapbox-gl.js.map --output dist/mapbox-gl.js.map] --standalone mapboxgl > dist/mapbox-gl.js",
+    "start": "budo js/mapbox-gl.js --serve=debug/mapbox-gl.js --live --port 9966 -- --transform --standalone mapboxgl",
+    "start-buffer": "budo bench/buffer/buffer_benchmark.js --port 6699 -- --transform unassertify --plugin [minifyify --map /bench/buffer/buffer_benchmark.js.map --output bench/buffer/buffer_benchmark.js.map] --standalone bufferBenchmark",
+    "test": "npm run lint && prova test/js/*/*.js -q",
+    "test-suite": "node test/render.test.js && node test/query.test.js"
+  },
+  "version": "0.12.1"
+}

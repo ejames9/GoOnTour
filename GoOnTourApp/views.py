@@ -39,11 +39,14 @@ def api_search_parameters(request):
 
     def set_coordinates(request):
         showtripper = ShowTripper()
-        showtripper.coordinates_lat = str(data['coordsLat'])
-        showtripper.coordinates_lon = str(data['coordsLon'])
+        showtripper.coordinates_lat = data['coordsLat']
+        showtripper.coordinates_lon = data['coordsLon']
         showtripper.save()
         i = showtripper.id
         i = str(i)
+        print showtripper
+        print showtripper.coordinates_lat
+        print showtripper.coordinates_lon
         print showtripper.coordinates_lat, showtripper.coordinates_lon
 
         return HttpResponse(i)
@@ -54,12 +57,11 @@ def api_search_parameters(request):
         print i
         i = int(i)
         print i
-        user = ShowTripper.objects.filter(pk=i)
-        print 'get coords'
-        print user
+        user = ShowTripper.objects.get(pk__exact=i)
+    
         coordinates = {}
-        coordinates.lattitude = user.coordinates_lat
-        coordinates.longitude = user.coordinates_lon
+        coordinates['lattitude'] = user.coordinates_lat
+        coordinates['longitude'] = user.coordinates_lon
         print coordinates
 
         return HttpResponse(json.dumps(coordinates))

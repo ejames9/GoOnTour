@@ -1,4 +1,8 @@
 // Aliases for commonly repeated functions.
+require('babel-polyfill');
+
+
+
 
 
 export var make = function(tag) {
@@ -66,7 +70,7 @@ export var css = function(el) {
   }
 };
 
-// export var once = function(event, el, callback) {  //NOTE once function needs work.
+// export var once = function(event, el, callback) {  //NOTE:30 once function needs work.
 //   if (typeof el === 'string') {
 //     if (el[0] === '#') {
 //       el = el.slice(1);
@@ -139,14 +143,35 @@ export var log = function(text) {
   return console.log(text);
 };
 
+export var sleep = function(milliseconds) {
+  var start = new Date().getTime();
+  while (true) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+};
 
 
-export var xhr = function(fd, url, callback, method) {
-  var ajax  = new XMLHttpRequest();
+export var xhr = function(fd, url, method) {
+  log('fd'); log(fd);
 
-  ajax.onloadend = function() {
-    callback;
+  var m = method || 'post';
+  var val;
+
+  var ajax = function() {
+      let ajax = new XMLHttpRequest();
+
+      ajax.onloadend = function() {
+        if (ajax.status === 200) {
+          val = this.response;
+        }
+      };
+      ajax.open(m, url, false);
+      ajax.send(fd);
   };
-  ajax.open(method, url);
-  ajax.send(fd);
+  ajax(fd, url, m);
+  val = JSON.parse(val); 
+
+  return val;
 };
