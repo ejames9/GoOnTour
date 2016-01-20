@@ -1,3 +1,6 @@
+
+//This file incorporates the reactGeocoder into the HomePage.
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19,6 +22,7 @@ var reactGeocoder = React.createClass({
   element: null,
 
   checkOverFlow: function checkOverFlow(l) {
+    //This function checks to see if the result element is overflowing with text or not.
     var elOverFlow = l.style.overflow;
     if (!elOverFlow || elOverFlow === 'visible') {
       l.style.overflow = 'hidden';
@@ -33,7 +37,8 @@ var reactGeocoder = React.createClass({
     return { value: null };
   },
   onSelect: function onSelect(value) {
-    this.setState({ value: value });
+    //This function handles select of a geocoder result. After deleting all tooltips, it calls loadMap() from
+    this.setState({ value: value }); //the conStructionModule with the lat, lng coordinates of the result.
     (0, _alias.log)(value.center);
     var t = document.getElementsByClassName('tTip');
     (0, _alias.log)(t.length);
@@ -48,10 +53,13 @@ var reactGeocoder = React.createClass({
     _conStruction.conStructionModule.loadMap(value.center);
   },
   onSuggest: function onSuggest() {
-    var that = this;
+    //This function handles the onSuggest event of the geocoder. This was the best point to implement tooltips
+    var that = this; //for the search results.
     var a = document.getElementsByTagName('a');
     for (var i = 0; i < a.length; i++) {
+      //This loop uses the checkOverFlow() function to check that all results are fully displayed in their elements.
       a[i].addEventListener('mouseover', function (e) {
+        //otherwise, a tooltip showing the full text of the result is displayed for a set period of time, then deleted.
         (0, _alias.log)(that.checkOverFlow);
         if (that.checkOverFlow(e.target)) {
           var thine = this;
@@ -68,6 +76,7 @@ var reactGeocoder = React.createClass({
             }
           }
           setTimeout(function () {
+            //Tooltips are a pain in the ass.
             (0, _alias.log)(thine.locText);
             var tTip = (0, _alias.make)('div');
             tTip.className = 'tTip';
@@ -122,7 +131,7 @@ var reactGeocoder = React.createClass({
 });
 
 exports.reactGeocoder = reactGeocoder;
-React.render(React.createElement(reactGeocoder, null), (0, _alias.dom)('#input1'));
+React.render(React.createElement(reactGeocoder, null), (0, _alias.dom)('#input1')); //Add GeoCoder to #input1 element.
 /* Geocoder:
    accessToken -- Mapbox developer access token (required)
    onSelect    -- function called after selecting result (required)

@@ -1,3 +1,6 @@
+
+//This file builds the reactFlickrPopupFooter.
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10,6 +13,8 @@ var _goOnTourMaps = require('./goOnTourMaps');
 
 var React = require('react');
 
+//Here, all the mini-components of the popup footer are prepared for incorporation into the final element. The 'props' are passed in when
+//the app is added to the DOM.
 var Title = React.createClass({
   displayName: 'Title',
 
@@ -108,12 +113,15 @@ var PopupFooter = React.createClass({
   displayName: 'PopupFooter',
 
   _handleClick: function _handleClick() {
+    //This function handles the click of the "route" button. When clicked, it calls the addDestination() function from the
     var userData = this.props.datum,
-        showData = this.props.coords;
-    _goOnTourMaps.goOnTourMapsModule.addDestination(userData, showData);
+        //goOnTourMapsModule, with userData and showData in tow.
+    showData = this.props.coords;
+    _goOnTourMaps.goOnTourMapsModule.addDestination(userData, showData); //goOnTourMapsModule.addDestination().
   },
 
   render: function render() {
+    //Render instructions for the app.
     return React.createElement(
       'div',
       { className: 'popup-footer' },

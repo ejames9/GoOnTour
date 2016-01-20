@@ -1,3 +1,5 @@
+
+//Entry point file for the react-daterange-picker.
 import React from 'react/addons';
 import moment from 'moment';
 import {} from 'moment-range';
@@ -8,21 +10,21 @@ import { log, dom } from './alias';
 
 
 export const DatePicker = React.createClass({
-  getInitialState() {
+  getInitialState() {                              //Initial state of the DatePicker.
     return {
       value: this.props.value,
       states: null,
     };
   },
 
-  handleSelect(value, states) {
-    this.setState({value, states});    log(value);
-    // var elData = dom('#data-bridge'); log(elData);
+  handleSelect(value, states) {                              //Select function, is called when a date-range is selected. It calls the showSearchOperations() function
+    this.setState({value, states});    log(value);           //from the conStructionModule.
+    // var elData = dom('#data-bridge'); log(elData);        //FIXME: This needs attention, at some point. Not super important.
     // var dataBridge = elData.getAttribute('data-bridge');
-        Construct.showSearchOperations();
+        Construct.showSearchOperations();                    //conStructionModule.showSearchOperations()
   },
 
-  render() {
+  render() {               //Renders the DateRangePicker element. It is actually added to an invisible element in the initiate.js module.
     return (
       <div>
         <DateRangePicker {...this.props}
