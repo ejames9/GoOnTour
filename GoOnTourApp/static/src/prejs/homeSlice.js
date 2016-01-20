@@ -10,7 +10,7 @@ export var homeSliceModule =  (function() {
 
   var homeHashBool = true;
 
-
+  //This function controls interaction with the two main home page buttons, The find shows button, and the plan tour button.
   var findShows = function(userData) {
     var findShowsButton = dom('#circle');
                var body = dom('body');
@@ -27,7 +27,7 @@ var startLocationInput1 = dom('.input1');
                   put(lines, body);
 
 
-    // off('click', '#circle', findShows);
+    // off('click', '#circle', findShows);             //Event listeners for the buttons.
     on('click', findShowsButton, restoreHomeButtons);
     on('click', '#arrow', function() {
       Construct.loadMap(0, userData);
@@ -35,6 +35,7 @@ var startLocationInput1 = dom('.input1');
 
   };
 
+  //This function restores the main home page buttons to original state.
   var restoreHomeButtons = function() {
     var findShowsButton = dom('#circle');
               var lines = dom('.lines');
@@ -50,10 +51,12 @@ var startLocationInput1 = dom('.input1');
           lines[0].parentNode.removeChild(lines[0]);
         }
       }
-     off('click', findShowsButton, restoreHomeButtons);
+     off('click', findShowsButton, restoreHomeButtons); //Listeners.
     //  on('click', findShowsButton, findShows);
   };
 
+
+  //This function changes the background-color of the .parallax element on scroll.
   var sunSetScroll = function() {
     var h, s, l,
     colors = [
@@ -78,6 +81,9 @@ var startLocationInput1 = dom('.input1');
         }
   };
 
+
+  //Home page initialization function. At this point, all is really does is set an event listener on the find shows button. It will eventually include
+  //code for setting hash, which will be useful for single-page app navigation. A previous attempt at this is commented-out.
   var initHome = function(userData) {
     //   log('initiate');
     // if (homeHashBool === true) {
@@ -97,7 +103,7 @@ var startLocationInput1 = dom('.input1');
     }
   };
 
-
+  //The modules' public functions.
   return {
     findShows: findShows,
     restoreHomeButtons: restoreHomeButtons,

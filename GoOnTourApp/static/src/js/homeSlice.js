@@ -16,6 +16,7 @@ var homeSliceModule = (function () {
 
   var homeHashBool = true;
 
+  //This function controls interaction with the two main home page buttons, The find shows button, and the plan tour button.
   var findShows = function findShows(userData) {
     var findShowsButton = (0, _alias.dom)('#circle');
     var body = (0, _alias.dom)('body');
@@ -31,13 +32,14 @@ var homeSliceModule = (function () {
 
     (0, _alias.put)(lines, body);
 
-    // off('click', '#circle', findShows);
+    // off('click', '#circle', findShows);             //Event listeners for the buttons.
     (0, _alias.on)('click', findShowsButton, restoreHomeButtons);
     (0, _alias.on)('click', '#arrow', function () {
       _conStruction.conStructionModule.loadMap(0, userData);
     });
   };
 
+  //This function restores the main home page buttons to original state.
   var restoreHomeButtons = function restoreHomeButtons() {
     var findShowsButton = (0, _alias.dom)('#circle');
     var lines = (0, _alias.dom)('.lines');
@@ -52,10 +54,11 @@ var homeSliceModule = (function () {
         lines[0].parentNode.removeChild(lines[0]);
       }
     }
-    (0, _alias.off)('click', findShowsButton, restoreHomeButtons);
+    (0, _alias.off)('click', findShowsButton, restoreHomeButtons); //Listeners.
     //  on('click', findShowsButton, findShows);
   };
 
+  //This function changes the background-color of the .parallax element on scroll.
   var sunSetScroll = function sunSetScroll() {
     var h,
         s,
@@ -79,6 +82,8 @@ var homeSliceModule = (function () {
     }
   };
 
+  //Home page initialization function. At this point, all is really does is set an event listener on the find shows button. It will eventually include
+  //code for setting hash, which will be useful for single-page app navigation. A previous attempt at this is commented-out.
   var initHome = function initHome(userData) {
     //   log('initiate');
     // if (homeHashBool === true) {
@@ -98,6 +103,7 @@ var homeSliceModule = (function () {
     }
   };
 
+  //The modules' public functions.
   return {
     findShows: findShows,
     restoreHomeButtons: restoreHomeButtons,

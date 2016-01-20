@@ -30,6 +30,9 @@ export const conStructionModule = (function() {
   var forHash;
   var userCoords;
 
+
+  //This function creates buttons for the map navigation panel that slides in from the right side of the screen. It is pretty straigt-forward
+  //DOM stuff. It creates the buttons, gives them id's, some icons, attaches them to the page and sets all necessary listeners.
   var buildButtons = function(userData) {
     var direct = dom('#directions');
     var engineButton = make('button');
@@ -56,12 +59,13 @@ export const conStructionModule = (function() {
         on('mouseover', zoomBackButton, toolTips);
   };
 
+
+  //This function controls the width of the map nav panel. It opens and closes it.
   var buildMenus = function() {
-    log(Map.bool);
     var menu = dom('#menu');
     var direct = dom('#directions');
 
-    if (Map.bool) {  //#DONE:30 Need a solution for Map.bool
+    if (Map.bool) {  //#TODO:30 Need a solution for Map.bool. It currently works, but all global boolean flags will eventually need addressing.
       direct.style.width = '180px';
       log('mapBool');
       Map.bool = false;
@@ -74,7 +78,7 @@ export const conStructionModule = (function() {
   };
 
 
-
+  //This is a closure/grouping of nested functions, which control the popupFooter. It is called by a listener once a marker is clicked.
   var displayPopupFooter = function(feature, artistPhotos, venuePhotos, datum) {
 
     var dataArray = [];
@@ -89,16 +93,18 @@ export const conStructionModule = (function() {
     var artistPics = artistPhotos.photos.photo;
         dataArray.push(data);                           log(artistPics);
 
-        _('<div id="react-app">')
+        _('<div id="react-app">')         //Create and attach the react app container to the DOM.
                     .appendTo('#block');
 
+    //This function initializes the react app that displays information in the popupFooter.
     var _displayArtistShowInfo = function(dataArray) {
       var popupFooter = React.render(
-        <PopupFooter data={dataArray} datum={datum} coords={coords}/>,
+        <PopupFooter data={dataArray} datum={datum} coords={coords}/>, //Attach react app to DOM.
         dom('#react-app')
       );
     };
 
+    //This function opens the popupFooter "up".
     var _upFooter = function(data) {
       log('hello');
       var footer = css('#block');
@@ -108,6 +114,7 @@ export const conStructionModule = (function() {
       }
     };
 
+    //This function displays photos from the flickr API at an interval set below.
     var _flickrPics = function(artistPics) {
       log(artistPics.length);
       if (artistPics.length > 0) {
@@ -126,14 +133,14 @@ export const conStructionModule = (function() {
       }
     };
 
-    if (artistPics.length > 0) {
-      _upFooter()
-      _flickrPics(artistPics);
-      _displayArtistShowInfo(data)
+    if (artistPics.length > 0) { //When this function is called, the above functions load, then execute this logic: If artistPics array is not empty.....
+      _upFooter()                   //Raise footer.
+      _flickrPics(artistPics);      //Display photos.
+      _displayArtistShowInfo(data)  //Display info from react app.
     }
   };
 
-
+  //This function closes the footer, and clears the interval set by the _flickrPics() function.
   var closeFooterAndKillPics = function() {
     var footer = css('#block');
     if (footer.height === '350px') {
@@ -143,7 +150,8 @@ export const conStructionModule = (function() {
   };
 
 
-
+  //This function creates tooltips that display info about the function of the buttons in the map nav panel. It's ridiculously complex and will
+  //undoubtedly be rewritten when the time comes.
   function toolTips(e) {
     log('step1'); log(id);
     var source = e.target.id;    log('tt'); log(source);
@@ -202,10 +210,14 @@ export const conStructionModule = (function() {
   };
 
 
+  //This function is called either by the reactGeoCoder (with coordinates), if the user manually selects a starting point, or by the findShows() Function
+  //in the homeSliceModule (with the number 0 as the coordinates arg), if the user decides to use the HTML5 geolocation API. An HTML template is provided
+  //by a Django view/API which is called via XMLHttpRequest, and loaded into a 'main' element. The map container is then displayed, and the map initialization Function
+  //is called either with coordinates or without (nulled).
   var loadMap = function(coordinates, userData) {
     forHash = coordinates;        log(coordinates);
 
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();     //Call Map view/API
     var url = '/map/';
 
     xhr.onloadend = function() {
@@ -219,10 +231,10 @@ export const conStructionModule = (function() {
           if (lines !== null) {
             kill(lines);
           }
-          kill('#trashCan');
-          main.innerHTML = newHTML;
+          kill('#trashCan');            //Remove Home page HTML
+          main.innerHTML = newHTML;     //Set new map page HTML
 
-          _('#calContainer')
+          _('#calContainer')            //Set up DatePicker view
                .css('display', 'block');
           _('#gel')
                .after(_('#calContainer'));
@@ -233,12 +245,12 @@ export const conStructionModule = (function() {
           _('#mapLogo')
                   .css('opacity', '.7');
 
-      if (coordinates !== 0) {  //NOTE:0 Removed this assignment => userCoords = coordinates;
+      if (coordinates !== 0) {          //If coordinates are not 0, display map container, and initialize map with coordinates. Pass in userData.
         log('!0'); log(userData);
         _('#map')
               .css('display', 'block');
         Map.initMap(coordinates, userData);
-      } else {
+      } else {                          //If coordinates argument is 0, display map container, and initialize map with null as first arg. Pass in userData.
         log('0');
         _('#map')
               .css('display', 'block');
@@ -252,7 +264,8 @@ export const conStructionModule = (function() {
 
   };
 
-
+  //This function is not yet being used, but may be in the future. It's purpose is to reload the Home page without reloading the browser window.
+  //It calls a Django view as an API, and loads the HTML into a 'main' element. It then calls the Home page initialization function from the homeSliceModule.
   var homeReload = function() {
     var xhr = new XMLHttpRequest(),
         url = '';
@@ -279,17 +292,18 @@ export const conStructionModule = (function() {
           bundle.id   = 'bundle';
 
       body.insertBefore(bundle, homeSlice);
-      initHome();
+      Home.initHome();                     //Initialize Home page.
     };
     xhr.open('POST', url);
     xhr.send(formData);
   };
 
 
-  var showSearchOperations = function(data) {   // Using a closure here to group search operation functions together,
-                                                //  and also utilizing the resulting namespace for userData, so as
-    // var decryptedData = xorCrypt(data);         // to avoid using a global variable.
+  //This group of functions controls the UI for setting search parameters. Using a closure here to group search operation functions together,
+  //and also utilizing the resulting namespace for userData, so as to avoid using a global variable.
+  var showSearchOperations = function(data) {
 
+    // var decryptedData = xorCrypt(data);
     var userData = {};       //JSON.parse(decryptedData); log('userData');log(userData);
         userData.searchParameters = {'startDate': null, 'endDate': null};
         userData.searchParameters.genres = [];
@@ -298,6 +312,9 @@ export const conStructionModule = (function() {
                genres = userData.searchParameters.genres;
 
 
+    //This function simply removes the dark filter over the map  once the user enters all search parameters, and calls the
+    //getEventfulDataForMarkers() function from the eventfulDataModule, with the completed userData object. The commented-out code is
+    //from when I was trying to make the map 3D using CSS only. It will be deleted when I am sure it is no longer useful.
     var _collectKeywords = function() {
       _('#gel')
               .remove();
@@ -311,7 +328,7 @@ export const conStructionModule = (function() {
               .css('display', 'block');
 
       log(userData); log('ylkjlkj');
-      // var getPxBounds = map.getPixelBounds;
+      // var getPxBounds = map.getPixelBounds;   //Animation loop for Mapbox tiles.
       //
       // map.getPixelBounds = function () {
       //   var bounds = getPxBounds.call(this);
@@ -322,9 +339,10 @@ export const conStructionModule = (function() {
       //   bounds.max.y=bounds.max.y+val;
       //   return bounds;
       // };
-      Events.getData(userData);
+      Events.getData(userData); //Abbreviation for eventfulDataModule.getEventfulDataForMarkers().
     };
 
+    //This function takes the value of the favArtist input, creates the HTML for the genre checkboxes, and appends it to the DOM.
     var _collectFavArtistGetGenres = function() {
       var favArtist = _('.favArtist-input').val();
 
@@ -363,10 +381,7 @@ export const conStructionModule = (function() {
       _('#gelText')
               .html('What are your favorite genres?')
               .css('left', '29%');
-      // _('<span>')_
-      //         .addClass('style-instructions')
-      //         .appendTo('#gel')
-      //         .html('Separate genre keywords by a comma and space, please.')
+
       _('.date-range-submit')
               .html('find shows!')
               .css('top', '68.5%')
@@ -375,8 +390,8 @@ export const conStructionModule = (function() {
 
       _('.checkbox')
               .get()
-              .forEach(function(el) {
-                on('click', el, function(el) {
+              .forEach(function(el) {                   //This function takes the value of a clicked checkbox input, checkes an array to see if it is already there, adds it if it isn't,
+                on('click', el, function(el) {          //or removes it if it is and then displays the resulting array in the input.
                   var value = el.target.value;   log(value); log(genres);
                   if (genres.indexOf(value) === -1) {
                     displayGenres.push(' ' + value);
@@ -392,6 +407,7 @@ export const conStructionModule = (function() {
               });
     };
 
+    //This function removes the reactDateRangePicker and sets up the favArtist collection UI.
     var _killCalendarsBuildFavArtistInput = function() {
       _('#calContainer').remove();
       _('#gelText')
@@ -406,7 +422,7 @@ export const conStructionModule = (function() {
               .css({top: '55%'});
     };
 
-
+    //This is the callback function for the submit button listener.
     var _submitFunction = function() {
       var start = userData.searchParameters.startDate,
             end = userData.searchParameters.endDate;
@@ -443,12 +459,12 @@ export const conStructionModule = (function() {
   };
 
 
-
+    //Public functions for this module.
                 return {
                  forHash: forHash,
             buildButtons: buildButtons,
               buildMenus: buildMenus,
-     displayPopupFooter: displayPopupFooter,
+      displayPopupFooter: displayPopupFooter,
   closeFooterAndKillPics: closeFooterAndKillPics,
                  loadMap: loadMap,
               homeReload: homeReload,

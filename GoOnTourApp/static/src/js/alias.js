@@ -6,11 +6,13 @@ Object.defineProperty(exports, '__esModule', {
 });
 require('babel-polyfill');
 
+//Create element alias function.
 var make = function make(tag) {
   return document.createElement(tag);
 };
 
 exports.make = make;
+//DOM querying alias function. Will automatically narrow class or tag queries down to one result. It will not return an array.
 var dom = function dom(l) {
   if (l[0] === '#') {
     l = l.slice(1);
@@ -24,6 +26,7 @@ var dom = function dom(l) {
 };
 
 exports.dom = dom;
+//DOM querying function, same as above, but it will return an array if a tag or class name are given as argument.
 var query = function query(l) {
   if (l[0] === '#') {
     l = l.slice(1);
@@ -37,11 +40,13 @@ var query = function query(l) {
 };
 
 exports.query = query;
+//Function for appending elements to other elements.
 var put = function put(el, mom) {
   return mom.appendChild(el);
 };
 
 exports.put = put;
+//Function for deleting elements from the DOM tree.
 var kill = function kill(el) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
@@ -59,6 +64,7 @@ var kill = function kill(el) {
 };
 
 exports.kill = kill;
+//Function for setting css style properties of elements.
 var css = function css(el) {
   if (el[0] === '#') {
     el = el.slice(1);
@@ -72,7 +78,9 @@ var css = function css(el) {
 };
 
 exports.css = css;
-// export var once = function(event, el, callback) {  //NOTE:30 once function needs work.
+//NOTE:30 once function needs work.
+
+// export var once = function(event, el, callback) {
 //   if (typeof el === 'string') {
 //     if (el[0] === '#') {
 //       el = el.slice(1);
@@ -108,6 +116,7 @@ exports.css = css;
 //    }
 // };
 
+//Function for setting event listeners.
 var on = function on(event, el, callback) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
@@ -125,6 +134,7 @@ var on = function on(event, el, callback) {
 };
 
 exports.on = on;
+//Function for removing event listeners.
 var off = function off(event, el, callback) {
   if (typeof el === 'string') {
     if (el[0] === '#') {
@@ -142,11 +152,13 @@ var off = function off(event, el, callback) {
 };
 
 exports.off = off;
+//Console.log alias function.
 var log = function log(text) {
   return console.log(text);
 };
 
 exports.log = log;
+//This practically useless function will lock up the browser for a preset amount of time.
 var sleep = function sleep(milliseconds) {
   var start = new Date().getTime();
   while (true) {
@@ -157,6 +169,7 @@ var sleep = function sleep(milliseconds) {
 };
 
 exports.sleep = sleep;
+//This is an alias function for XMLHttpRequests.
 var xhr = function xhr(fd, url, method) {
   log('fd');log(fd);
 

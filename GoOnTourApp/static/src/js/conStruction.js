@@ -37,6 +37,8 @@ var conStructionModule = (function () {
   var forHash;
   var userCoords;
 
+  //This function creates buttons for the map navigation panel that slides in from the right side of the screen. It is pretty straigt-forward
+  //DOM stuff. It creates the buttons, gives them id's, some icons, attaches them to the page and sets all necessary listeners.
   var buildButtons = function buildButtons(userData) {
     var direct = (0, _alias.dom)('#directions');
     var engineButton = (0, _alias.make)('button');
@@ -63,13 +65,13 @@ var conStructionModule = (function () {
     (0, _alias.on)('mouseover', zoomBackButton, toolTips);
   };
 
+  //This function controls the width of the map nav panel. It opens and closes it.
   var buildMenus = function buildMenus() {
-    (0, _alias.log)(_goOnTourMaps.goOnTourMapsModule.bool);
     var menu = (0, _alias.dom)('#menu');
     var direct = (0, _alias.dom)('#directions');
 
     if (_goOnTourMaps.goOnTourMapsModule.bool) {
-      //#DONE:30 Need a solution for Map.bool
+      //#TODO:30 Need a solution for Map.bool. It currently works, but all global boolean flags will eventually need addressing.
       direct.style.width = '180px';
       (0, _alias.log)('mapBool');
       _goOnTourMaps.goOnTourMapsModule.bool = false;
@@ -81,6 +83,7 @@ var conStructionModule = (function () {
     }
   };
 
+  //This is a closure/grouping of nested functions, which control the popupFooter. It is called by a listener once a marker is clicked.
   var displayPopupFooter = function displayPopupFooter(feature, artistPhotos, venuePhotos, datum) {
 
     var dataArray = [];
@@ -95,12 +98,16 @@ var conStructionModule = (function () {
     var artistPics = artistPhotos.photos.photo;
     dataArray.push(data);(0, _alias.log)(artistPics);
 
-    _('<div id="react-app">').appendTo('#block');
+    _('<div id="react-app">') //Create and attach the react app container to the DOM.
+    .appendTo('#block');
 
+    //This function initializes the react app that displays information in the popupFooter.
     var _displayArtistShowInfo = function _displayArtistShowInfo(dataArray) {
-      var popupFooter = React.render(React.createElement(_reactFlickrPopupFooter.PopupFooter, { data: dataArray, datum: datum, coords: coords }), (0, _alias.dom)('#react-app'));
+      var popupFooter = React.render(React.createElement(_reactFlickrPopupFooter.PopupFooter, { data: dataArray, datum: datum, coords: coords }), //Attach react app to DOM.
+      (0, _alias.dom)('#react-app'));
     };
 
+    //This function opens the popupFooter "up".
     var _upFooter = function _upFooter(data) {
       (0, _alias.log)('hello');
       var footer = (0, _alias.css)('#block');
@@ -110,6 +117,7 @@ var conStructionModule = (function () {
       }
     };
 
+    //This function displays photos from the flickr API at an interval set below.
     var _flickrPics = function _flickrPics(artistPics) {
       (0, _alias.log)(artistPics.length);
       if (artistPics.length > 0) {
@@ -130,12 +138,14 @@ var conStructionModule = (function () {
     };
 
     if (artistPics.length > 0) {
-      _upFooter();
-      _flickrPics(artistPics);
-      _displayArtistShowInfo(data);
+      //When this function is called, the above functions load, then execute this logic: If artistPics array is not empty.....
+      _upFooter(); //Raise footer.
+      _flickrPics(artistPics); //Display photos.
+      _displayArtistShowInfo(data); //Display info from react app.
     }
   };
 
+  //This function closes the footer, and clears the interval set by the _flickrPics() function.
   var closeFooterAndKillPics = function closeFooterAndKillPics() {
     var footer = (0, _alias.css)('#block');
     if (footer.height === '350px') {
@@ -144,6 +154,8 @@ var conStructionModule = (function () {
     }
   };
 
+  //This function creates tooltips that display info about the function of the buttons in the map nav panel. It's ridiculously complex and will
+  //undoubtedly be rewritten when the time comes.
   function toolTips(e) {
     (0, _alias.log)('step1');(0, _alias.log)(id);
     var source = e.target.id;(0, _alias.log)('tt');(0, _alias.log)(source);
@@ -199,10 +211,14 @@ var conStructionModule = (function () {
     }
   };
 
+  //This function is called either by the reactGeoCoder (with coordinates), if the user manually selects a starting point, or by the findShows() Function
+  //in the homeSliceModule (with the number 0 as the coordinates arg), if the user decides to use the HTML5 geolocation API. An HTML template is provided
+  //by a Django view/API which is called via XMLHttpRequest, and loaded into a 'main' element. The map container is then displayed, and the map initialization Function
+  //is called either with coordinates or without (nulled).
   var loadMap = function loadMap(coordinates, userData) {
     forHash = coordinates;(0, _alias.log)(coordinates);
 
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest(); //Call Map view/API
     var url = '/map/';
 
     xhr.onloadend = function () {
@@ -216,21 +232,23 @@ var conStructionModule = (function () {
       if (lines !== null) {
         (0, _alias.kill)(lines);
       }
-      (0, _alias.kill)('#trashCan');
-      main.innerHTML = newHTML;
+      (0, _alias.kill)('#trashCan'); //Remove Home page HTML
+      main.innerHTML = newHTML; //Set new map page HTML
 
-      _('#calContainer').css('display', 'block');
+      _('#calContainer') //Set up DatePicker view
+      .css('display', 'block');
       _('#gel').after(_('#calContainer'));
       _('#gel').css('display', 'block');
       _('#directions, #block, #keywords, #submit').css('display', 'none');
       _('#mapLogo').css('opacity', '.7');
 
       if (coordinates !== 0) {
-        //NOTE:0 Removed this assignment => userCoords = coordinates;
+        //If coordinates are not 0, display map container, and initialize map with coordinates. Pass in userData.
         (0, _alias.log)('!0');(0, _alias.log)(userData);
         _('#map').css('display', 'block');
         _goOnTourMaps.goOnTourMapsModule.initMap(coordinates, userData);
       } else {
+        //If coordinates argument is 0, display map container, and initialize map with null as first arg. Pass in userData.
         (0, _alias.log)('0');
         _('#map').css('display', 'block');
         _goOnTourMaps.goOnTourMapsModule.initMap(null, userData);
@@ -240,6 +258,8 @@ var conStructionModule = (function () {
     xhr.send(null);
   };
 
+  //This function is not yet being used, but may be in the future. It's purpose is to reload the Home page without reloading the browser window.
+  //It calls a Django view as an API, and loads the HTML into a 'main' element. It then calls the Home page initialization function from the homeSliceModule.
   var homeReload = function homeReload() {
     var xhr = new XMLHttpRequest(),
         url = '';
@@ -266,17 +286,17 @@ var conStructionModule = (function () {
       bundle.id = 'bundle';
 
       body.insertBefore(bundle, homeSlice);
-      initHome();
+      _homeSlice.homeSliceModule.initHome(); //Initialize Home page.
     };
     xhr.open('POST', url);
     xhr.send(formData);
   };
 
+  //This group of functions controls the UI for setting search parameters. Using a closure here to group search operation functions together,
+  //and also utilizing the resulting namespace for userData, so as to avoid using a global variable.
   var showSearchOperations = function showSearchOperations(data) {
-    // Using a closure here to group search operation functions together,
-    //  and also utilizing the resulting namespace for userData, so as
-    // var decryptedData = xorCrypt(data);         // to avoid using a global variable.
 
+    // var decryptedData = xorCrypt(data);
     var userData = {}; //JSON.parse(decryptedData); log('userData');log(userData);
     userData.searchParameters = { 'startDate': null, 'endDate': null };
     userData.searchParameters.genres = [];
@@ -284,6 +304,9 @@ var conStructionModule = (function () {
         displayGenres = [],
         genres = userData.searchParameters.genres;
 
+    //This function simply removes the dark filter over the map  once the user enters all search parameters, and calls the
+    //getEventfulDataForMarkers() function from the eventfulDataModule, with the completed userData object. The commented-out code is
+    //from when I was trying to make the map 3D using CSS only. It will be deleted when I am sure it is no longer useful.
     var _collectKeywords = function _collectKeywords() {
       _('#gel').remove();
       // _('#map')
@@ -295,7 +318,7 @@ var conStructionModule = (function () {
       _('#mapLogo').css('display', 'block');
 
       (0, _alias.log)(userData);(0, _alias.log)('ylkjlkj');
-      // var getPxBounds = map.getPixelBounds;
+      // var getPxBounds = map.getPixelBounds;   //Animation loop for Mapbox tiles.
       //
       // map.getPixelBounds = function () {
       //   var bounds = getPxBounds.call(this);
@@ -306,9 +329,10 @@ var conStructionModule = (function () {
       //   bounds.max.y=bounds.max.y+val;
       //   return bounds;
       // };
-      _eventfulData.eventfulDataModule.getData(userData);
+      _eventfulData.eventfulDataModule.getData(userData); //Abbreviation for eventfulDataModule.getEventfulDataForMarkers().
     };
 
+    //This function takes the value of the favArtist input, creates the HTML for the genre checkboxes, and appends it to the DOM.
     var _collectFavArtistGetGenres = function _collectFavArtistGetGenres() {
       var favArtist = _('.favArtist-input').val();
 
@@ -320,14 +344,13 @@ var conStructionModule = (function () {
 
       _('.favArtist-input').val('').prop('readonly', true).addClass('favArtist-input-fx');
       _('#gelText').html('What are your favorite genres?').css('left', '29%');
-      // _('<span>')_
-      //         .addClass('style-instructions')
-      //         .appendTo('#gel')
-      //         .html('Separate genre keywords by a comma and space, please.')
+
       _('.date-range-submit').html('find shows!').css('top', '68.5%').off('click', _collectFavArtistGetGenres).on('click', _collectKeywords);
 
       _('.checkbox').get().forEach(function (el) {
+        //This function takes the value of a clicked checkbox input, checkes an array to see if it is already there, adds it if it isn't,
         (0, _alias.on)('click', el, function (el) {
+          //or removes it if it is and then displays the resulting array in the input.
           var value = el.target.value;(0, _alias.log)(value);(0, _alias.log)(genres);
           if (genres.indexOf(value) === -1) {
             displayGenres.push(' ' + value);
@@ -343,6 +366,7 @@ var conStructionModule = (function () {
       });
     };
 
+    //This function removes the reactDateRangePicker and sets up the favArtist collection UI.
     var _killCalendarsBuildFavArtistInput = function _killCalendarsBuildFavArtistInput() {
       _('#calContainer').remove();
       _('#gelText').html('Who is your favorite Artist/band?').css({ fontSize: '36px', left: '28%' });
@@ -350,6 +374,7 @@ var conStructionModule = (function () {
       _('.date-range-submit').off('click', _submitFunction).on('click', _collectFavArtistGetGenres).css({ top: '55%' });
     };
 
+    //This is the callback function for the submit button listener.
     var _submitFunction = function _submitFunction() {
       var start = userData.searchParameters.startDate,
           end = userData.searchParameters.endDate;
@@ -384,6 +409,7 @@ var conStructionModule = (function () {
     }
   };
 
+  //Public functions for this module.
   return {
     forHash: forHash,
     buildButtons: buildButtons,
