@@ -13,7 +13,7 @@ secret = u'20f441744a195a41'
 
 
 @csrf_exempt
-def Home(request): #Main View
+def Home(request): #This is the HomePage view, but also serves as an API endpoint for reloading HomePage HTML.
     if 'reload' in request.POST:
         print 'reload'
         template = render(request, 'build/homeMain.html')
@@ -23,7 +23,7 @@ def Home(request): #Main View
 
 
 @csrf_exempt
-def Map(request):
+def Map(request): #This is an API for loading the map view html.
     if request.GET:
         template = render(request, 'build/mapMain.html')
         return HttpResponse(template)
@@ -58,7 +58,7 @@ def api_search_parameters(request):
         i = int(i)
         print i
         user = ShowTripper.objects.get(pk__exact=i)
-    
+
         coordinates = {}
         coordinates['lattitude'] = user.coordinates_lat
         coordinates['longitude'] = user.coordinates_lon
@@ -151,3 +151,8 @@ def api_eventful_query_results(request):
 #Test View
 def Test(request):
     return render(request, 'build/Test.html')
+
+
+
+
+#TODO: Finish commenting this code.
