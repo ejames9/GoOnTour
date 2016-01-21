@@ -85,13 +85,13 @@ var homeSliceModule = (function () {
   //Home page initialization function. At this point, all is really does is set an event listener on the find shows button. It will eventually include
   //code for setting hash, which will be useful for single-page app navigation. A previous attempt at this is commented-out.
   var initHome = function initHome(userData) {
-    //   log('initiate');
-    // if (homeHashBool === true) {
-    //   log(homeHashBool);
-    //   window.location.hash = '';
-    //   homeHashBool = false;
-    // }
-    // Map.mapHashBool = true;
+    (0, _alias.log)('initiate');
+    if (homeHashBool === true) {
+      (0, _alias.log)(homeHashBool);
+      window.location.hash = '';
+      homeHashBool = false;
+    }
+    _goOnTourMaps.goOnTourMapsModule.mapHashBool = true;
 
     var findShowsButton = (0, _alias.dom)('#circle');
     (0, _alias.log)(findShowsButton);

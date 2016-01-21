@@ -40,18 +40,11 @@ var DatePicker = _reactAddons2['default'].createClass({
   },
 
   handleSelect: function handleSelect(value, states) {
-<<<<<<< Updated upstream
     //Select function, is called when a date-range is selected. It calls the showSearchOperations() function
     this.setState({ value: value, states: states });(0, _alias.log)(value); //from the conStructionModule.
     // var elData = dom('#data-bridge'); log(elData);        //FIXME: This needs attention, at some point. Not super important.
     // var dataBridge = elData.getAttribute('data-bridge');
     _conStruction.conStructionModule.showSearchOperations(); //conStructionModule.showSearchOperations()
-=======
-    this.setState({ value: value, states: states });(0, _alias.log)(value);
-    var elData = (0, _alias.dom)('#data-bridge');(0, _alias.log)(elData);
-    var dataBridge = elData.getAttribute('data-bridge');
-    _conStruction.conStructionModule.showSearchOperations(dataBridge);
->>>>>>> Stashed changes
   },
 
   render: function render() {

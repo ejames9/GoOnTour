@@ -1,5 +1,4 @@
 // Aliases for commonly repeated functions.
-
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
